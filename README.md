@@ -1,4 +1,4 @@
-# AI Engineer Learning Hub
+# AI Engineer Learning Hub ~
 
 這個資料夾可以直接部署到 GitHub Pages。
 
