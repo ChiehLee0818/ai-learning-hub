@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Senior AI Engineer 面試筆記｜Phase 1–2</title>
+<style>
+:root{
+  --bg:#0b1020;
+  --panel:#111831;
+  --panel2:#16203f;
+  --text:#edf2ff;
+  --muted:#9fb0d9;
+  --line:#2a3766;
+  --accent:#7ea2ff;
+  --accent2:#78e4c5;
+  --warn:#ffd27a;
+  --danger:#ff8f9f;
+  --ok:#8fe3a8;
+  --code:#0a0f1d;
+  --shadow:0 18px 50px rgba(0,0,0,.24);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:linear-gradient(180deg,#090e1b 0%,#0d1327 45%,#0b1020 100%);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  line-height:1.75;
+}
+a{color:inherit}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}
+aside{
+  position:sticky;top:0;height:100vh;overflow:auto;
+  border-right:1px solid var(--line);
+  background:rgba(10,15,29,.92);backdrop-filter:blur(10px);
+  padding:24px 18px;
+}
+.brand{font-weight:800;font-size:20px;margin-bottom:6px}
+.subbrand{color:var(--muted);font-size:13px;margin-bottom:18px}
+.search{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#0d1428;color:var(--text);outline:none;margin-bottom:16px}
+.nav-group{margin:18px 0 8px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+nav a{
+  display:block;text-decoration:none;padding:9px 10px;border-radius:10px;color:#d9e3ff;font-size:14px
+}
+nav a:hover{background:var(--panel2);color:white}
+main{padding:34px clamp(22px,4vw,64px) 80px;max-width:1300px}
+.hero{
+  padding:34px;border:1px solid var(--line);border-radius:24px;
+  background:
+    radial-gradient(circle at 90% 15%,rgba(126,162,255,.18),transparent 30%),
+    radial-gradient(circle at 15% 0%,rgba(120,228,197,.12),transparent 30%),
+    var(--panel);
+  box-shadow:var(--shadow);margin-bottom:30px
+}
+.hero h1{font-size:clamp(30px,5vw,54px);line-height:1.1;margin:0 0 14px}
+.hero p{max-width:900px;color:#c8d5f5;font-size:17px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.badge{padding:6px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:#dce5ff;background:#101831}
+.phase-title{
+  margin-top:54px;padding-top:12px;border-top:1px solid var(--line)
+}
+h2{font-size:32px;margin:18px 0 8px}
+h3{font-size:23px;margin:30px 0 10px}
+h4{font-size:18px;margin:22px 0 8px}
+p{margin:8px 0 14px}
+.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{
+  border:1px solid var(--line);border-radius:18px;background:var(--panel);
+  padding:18px;box-shadow:0 8px 24px rgba(0,0,0,.12)
+}
+.card h3,.card h4{margin-top:0}
+.callout{
+  border-left:4px solid var(--accent);padding:14px 16px;background:#101a35;border-radius:12px;margin:16px 0
+}
+.callout.ok{border-color:var(--ok);background:rgba(60,130,80,.12)}
+.callout.warn{border-color:var(--warn);background:rgba(150,110,30,.12)}
+.callout.danger{border-color:var(--danger);background:rgba(155,55,75,.12)}
+.kicker{color:var(--accent2);font-weight:700;font-size:13px;letter-spacing:.04em}
+code{background:var(--code);padding:.15em .4em;border-radius:6px;color:#dce5ff}
+pre{
+  white-space:pre-wrap;background:var(--code);border:1px solid var(--line);
+  padding:16px;border-radius:14px;overflow:auto;color:#dfe8ff
+}
+table{width:100%;border-collapse:collapse;margin:14px 0 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th,td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{text-align:left;background:#151f3d}
+tr:last-child td{border-bottom:0}
+ul,ol{padding-left:22px}
+details{
+  border:1px solid var(--line);background:var(--panel);border-radius:14px;margin:10px 0;overflow:hidden
+}
+summary{cursor:pointer;font-weight:700;padding:14px 16px;background:#121b35}
+details>div{padding:14px 16px}
+.diagram{
+  border:1px solid var(--line);background:#0d1428;border-radius:18px;padding:18px;margin:16px 0;overflow:auto
+}
+.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.node{padding:10px 12px;border:1px solid #39508e;border-radius:12px;background:#142044;min-width:118px;text-align:center}
+.arrow{color:var(--accent);font-size:20px;font-weight:700}
+.stack{display:grid;gap:8px}
+.layer{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#111a35}
+.layer strong{color:#fff}
+.interview{
+  border:1px solid #4a5f9f;background:linear-gradient(180deg,#131e3e,#10172c);
+  border-radius:16px;padding:16px;margin:14px 0
+}
+.interview .q{font-weight:800;color:#fff}
+.interview .follow{color:var(--warn);font-size:14px}
+.score{
+  display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:4px 8px;border-radius:999px;
+  border:1px solid var(--line);color:#dce6ff;background:#0e1731
+}
+.term{display:inline-block;padding:2px 7px;border-radius:8px;background:#17234a;color:#cfe0ff;border:1px solid #2f4380}
+.checklist label{display:block;margin:8px 0}
+.checklist input{accent-color:#7ea2ff;transform:scale(1.15);margin-right:8px}
+.quiz button{
+  border:1px solid var(--line);background:#17234a;color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;margin:4px 6px 4px 0
+}
+.quiz .answer{display:none;margin-top:10px;padding:10px;border-radius:10px;background:#0f1831}
+.small{font-size:13px}
+.hidden{display:none !important}
+footer{margin-top:60px;color:var(--muted);font-size:13px;padding-top:20px;border-top:1px solid var(--line)}
+@media (max-width:920px){
+  .layout{grid-template-columns:1fr}
+  aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .grid,.grid3{grid-template-columns:1fr}
+  main{padding:24px 16px 60px}
+}
+@media print{
+  aside,.search{display:none}
+  .layout{display:block}
+  body{background:#fff;color:#111}
+  main{max-width:none}
+  .card,.hero,.diagram,.interview,details,table{box-shadow:none;background:#fff;color:#111;border-color:#bbb}
+  .muted{color:#555}.term,.badge,.node,.layer{color:#111;background:#f2f2f2;border-color:#aaa}
+}
+
+.code-title{margin-top:18px;padding:7px 10px;border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;background:#17213f;color:var(--accent2);font-size:12px;font-weight:800;letter-spacing:.03em}
+.code-title + pre{margin-top:0;border-radius:0 0 14px 14px}
+.source-note{font-size:12px;color:var(--muted);padding:9px 11px;border:1px dashed var(--line);border-radius:10px;background:#0d1428;margin:10px 0}
+.source-note a{color:#bfd0ff}
+.concept-map{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;margin:14px 0}
+.concept-map .node{min-width:0}
+@media (max-width:920px){.concept-map{grid-template-columns:1fr 1fr}}
+
+
+/* ===== v3 mobile study mode ===== */
+.mobile-topbar{
+  display:none;
+  position:sticky;top:0;z-index:1200;
+  height:58px;padding:0 12px;
+  align-items:center;justify-content:space-between;
+  background:rgba(10,15,29,.94);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+.mobile-topbar .title{
+  font-size:14px;font-weight:800;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:58vw;
+}
+.icon-btn{
+  width:38px;height:38px;border-radius:11px;
+  border:1px solid var(--line);background:var(--panel);
+  color:var(--text);cursor:pointer;font-size:18px;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.side-actions{display:flex;gap:8px;margin:10px 0 14px}
+.side-actions .icon-btn{width:auto;padding:0 11px;font-size:13px}
+.drawer-backdrop{
+  display:none;position:fixed;inset:0;z-index:1090;
+  background:rgba(0,0,0,.48);backdrop-filter:blur(2px);
+}
+.reading-progress{
+  position:fixed;top:0;left:0;z-index:1400;
+  height:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.code-wrap{position:relative;margin:14px 0}
+.code-wrap .code-title{margin-bottom:0}
+.code-wrap pre{margin-top:0;padding-top:46px}
+.copy-code{
+  position:absolute;right:9px;top:9px;z-index:3;
+  border:1px solid var(--line);background:#182342;color:#eaf0ff;
+  border-radius:9px;padding:6px 9px;font-size:12px;cursor:pointer;
+}
+.copy-code.copied{border-color:var(--ok);color:var(--ok)}
+.section-pager{
+  display:flex;justify-content:space-between;gap:12px;
+  margin:32px 0 6px;padding-top:18px;border-top:1px solid var(--line)
+}
+.section-pager a{
+  flex:1;text-decoration:none;border:1px solid var(--line);
+  background:var(--panel);border-radius:14px;padding:12px 14px;
+  font-size:13px;color:var(--text)
+}
+.section-pager a:last-child{text-align:right}
+.section-pager .disabled{opacity:.35;pointer-events:none}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0 20px}
+.table-scroll table{margin:0;min-width:680px}
+.study-note{
+  border:1px solid var(--line);border-radius:14px;padding:14px;
+  background:var(--panel);margin:18px 0
+}
+#backToTop{
+  position:fixed;right:18px;bottom:20px;z-index:900;
+  opacity:0;pointer-events:none;transition:.2s;
+}
+#backToTop.show{opacity:1;pointer-events:auto}
+
+/* Light theme */
+body.light{
+  --bg:#f5f7fb;--panel:#ffffff;--panel2:#eef3ff;--text:#1b2438;
+  --muted:#5e6a85;--line:#d7deec;--accent:#355dcc;--accent2:#087d67;
+  --warn:#a56500;--danger:#c33a53;--ok:#247d42;--code:#f3f5f9;
+  background:linear-gradient(180deg,#f7f9fd 0%,#edf2fa 100%);
+}
+body.light aside,
+body.light .mobile-topbar{background:rgba(255,255,255,.95)}
+body.light .hero{
+  background:
+    radial-gradient(circle at 90% 15%,rgba(53,93,204,.08),transparent 30%),
+    radial-gradient(circle at 15% 0%,rgba(8,125,103,.07),transparent 30%),
+    var(--panel)
+}
+body.light .callout{background:#eef3ff}
+body.light .callout.ok{background:#edf8f0}
+body.light .callout.warn{background:#fff7e8}
+body.light .callout.danger{background:#fff0f2}
+body.light .diagram,
+body.light .source-note,
+body.light pre{background:#f5f7fb;color:#1d2638}
+body.light .node,
+body.light .layer,
+body.light .term,
+body.light .badge{background:#eef3ff;color:#1c2e58}
+body.light .interview{background:linear-gradient(180deg,#f7f9ff,#eef3ff);color:#1b2438}
+body.light .interview .q{color:#14213d}
+body.light .copy-code{background:#fff;color:#25304a}
+
+@media (max-width:920px){
+  body{font-size:16px}
+  .mobile-topbar{display:flex}
+  .layout{display:block}
+  aside{
+    position:fixed;left:0;top:0;z-index:1100;
+    width:min(84vw,320px);height:100dvh;
+    transform:translateX(-105%);transition:transform .24s ease;
+    border-right:1px solid var(--line);border-bottom:0;
+    padding:20px 16px 28px;
+  }
+  body.drawer-open aside{transform:translateX(0)}
+  body.drawer-open .drawer-backdrop{display:block}
+  body.drawer-open{overflow:hidden}
+  main{padding:20px 14px 64px;max-width:none}
+  .hero{padding:22px 18px;border-radius:18px}
+  .hero h1{font-size:32px}
+  h2{font-size:27px;line-height:1.25}
+  h3{font-size:21px;line-height:1.35}
+  h4{font-size:17px}
+  .grid,.grid3{grid-template-columns:1fr}
+  .concept-map{grid-template-columns:1fr}
+  .diagram{padding:14px}
+  .flow{align-items:stretch}
+  .node{flex:1 1 140px;min-width:0}
+  pre{
+    overflow-x:auto;white-space:pre;
+    -webkit-overflow-scrolling:touch;
+    font-size:13px;line-height:1.6;
+  }
+  .code-wrap pre{padding:44px 14px 14px}
+  .section-pager{flex-direction:column}
+  .section-pager a:last-child{text-align:left}
+  .table-scroll{margin-left:-2px;margin-right:-2px}
+  details>div{padding:12px 14px}
+  summary{padding:13px 14px}
+}
+
+</style>
+
+<style>
+.hub-home-link{
+  position:fixed;left:16px;bottom:18px;z-index:1600;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 12px;border-radius:999px;
+  border:1px solid rgba(127,127,127,.35);
+  background:rgba(20,26,40,.88);color:#fff;
+  text-decoration:none;font:600 12px -apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 6px 20px rgba(0,0,0,.18)
+}
+@media (prefers-color-scheme: light){
+  .hub-home-link{background:rgba(255,255,255,.92);color:#16202b}
+}
+</style>
+
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+<div class="mobile-topbar">
+  <button class="icon-btn" id="menuBtn" aria-label="開啟目錄">☰</button>
+  <div class="title" id="mobileTitle">AI Engineer 面試筆記</div>
+  <button class="icon-btn" id="mobileThemeBtn" aria-label="切換深淺色">☾</button>
+</div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<button class="icon-btn" id="backToTop" aria-label="回到頂端">↑</button>
+
+<div class="layout">
+<aside>
+  <div class="brand">AI Engineer 面試筆記</div>
+  <div class="subbrand">Phase 1–2｜Senior Applied AI / Agent / RAG</div>
+<div class="side-actions"><button class="icon-btn" id="desktopThemeBtn">◐ 深淺色</button><button class="icon-btn" id="resetProgressBtn">↺ 重設勾選</button></div>
+  <input id="search" class="search" placeholder="搜尋：RAG、KV Cache、LLM Judge…" />
+  <nav>
+    <div class="nav-group">Start</div>
+    <a href="#roadmap">0. 先看全圖</a>
+    <div class="nav-group">Phase 1</div>
+    <a href="#backend">1. Backend & Data</a>
+    <a href="#vectordb">2. Vector DB</a>
+    <a href="#rag">3. RAG 深度知識</a>
+    <a href="#agent">4. Agent Architecture</a>
+    <a href="#llm">5. LLM Fundamentals</a>
+    <div class="nav-group">Phase 2</div>
+    <a href="#eval">6. AI Evaluation</a>
+    <a href="#system">7. AI System Design</a>
+    <div class="nav-group">Interview</div>
+    <a href="#mock">8. 模擬面試題庫</a>
+    <a href="#check">9. 面試前 Checklist</a>
+  </nav>
+</aside>
+
+<main>
+<section class="hero searchable" id="roadmap">
+  <div class="kicker">FOR SENIOR AI ENGINEER INTERVIEWS</div>
+  <h1>把「做過 AI Agent」升級成<br/>「能解釋、能設計、能取捨」</h1>
+  <p>這份筆記不是從零教 ML，而是針對已經有 RAG / Agent / Production 經驗的人，補齊 Senior 面試最容易被追問的底層知識與 system thinking。</p>
+  <div class="badges">
+    <span class="badge">RAG</span><span class="badge">Agent Architecture</span><span class="badge">Transformer / LLM</span>
+    <span class="badge">Evaluation</span><span class="badge">System Design</span><span class="badge">Mock Interview</span>
+  </div>
+
+<div class="section-pager"><a class="disabled">← 上一章</a><a href="#backend">Backend & Data →</a></div>
+
+<div class="study-note">
+<strong>手機閱讀模式：</strong>左上 ☰ 開啟章節目錄；右上切換深淺色；程式碼可橫向滑動並直接複製；Checklist 會自動保存在目前瀏覽器。
+</div>
+</section>
+
+<section class="searchable">
+<h2>0. 先看全圖：你真正要會的是「定位問題」</h2>
+<div class="diagram">
+  <div class="flow">
+    <div class="node">User Query</div><div class="arrow">→</div>
+    <div class="node">Retrieval / Context</div><div class="arrow">→</div>
+    <div class="node">Agent Decision</div><div class="arrow">→</div>
+    <div class="node">Tool / LLM</div><div class="arrow">→</div>
+    <div class="node">Validation</div><div class="arrow">→</div>
+    <div class="node">Response</div>
+  </div>
+</div>
+<p>Senior 面試不只問「怎麼做」，更常問：<strong>錯在哪一層？怎麼證明？如果換方案會犧牲什麼？</strong></p>
+<div class="grid">
+  <div class="card"><h4>Phase 1：技術地基</h4><p>Backend/Data → Vector DB → RAG → Agent Architecture → LLM Fundamentals</p><p class="muted">目標：不只會用框架，還知道 API、資料、state、context 與 persistence 底層怎麼串起來。</p></div>
+  <div class="card"><h4>Phase 2：Senior 能力</h4><p>Evaluation → AI System Design</p><p class="muted">目標：能建立品質閉環，並在可靠性、成本、延遲、安全間做取捨。</p></div>
+</div>
+</section>
+
+
+<section class="phase-title searchable" id="backend">
+<div class="kicker">PHASE 1 · MODULE 1</div>
+<h2>1. Backend & Data Foundations</h2>
+<p>AI Engineer 不一定要變成 Backend Engineer 或 DBA，但要能看懂一個 production AI service 的資料怎麼進來、存在哪裡、如何被 API 讀寫，以及 scale 之後哪裡會出問題。</p>
+
+<h3>1.1 先把「不同層」分清楚</h3>
+<div class="diagram"><div class="flow"><div class="node">Frontend / Client</div><div class="arrow">→ HTTP →</div><div class="node">REST API<br/><small>FastAPI</small></div><div class="arrow">→</div><div class="node">Business / Agent Logic</div><div class="arrow">→</div><div class="node">Driver / ORM</div><div class="arrow">→</div><div class="node">Database</div></div></div>
+<div class="table-scroll"><table><tr><th>名詞</th><th>它是什麼</th><th>不要跟什麼搞混</th></tr><tr><td>SQL</td><td>查詢 / 操作 relational data 的語言</td><td>不是 database 產品</td></tr><tr><td>PostgreSQL / MySQL</td><td>Relational Database Management System</td><td>不是 API</td></tr><tr><td>NoSQL</td><td>非傳統 relational model 的一大類 DB</td><td>不是單一產品</td></tr><tr><td>REST API</td><td>服務透過 HTTP 對外提供資源 / 操作</td><td>不是 DB protocol</td></tr><tr><td>ORM</td><td>把程式 object / query 映射到 DB</td><td>不是 DB 本身</td></tr><tr><td>Supabase</td><td>以 Postgres 為核心的 backend platform</td><td>不是「另一種 NoSQL DB」</td></tr></table></div>
+
+<h3>1.2 REST / HTTP：AI Service 的入口</h3>
+<p>你要能理解 request 如何進到服務、參數放哪裡、status code 表示什麼，以及 retry / idempotency 為什麼重要。</p>
+<div class="table-scroll"><table><tr><th>Method</th><th>常見語意</th><th>例子</th></tr><tr><td>GET</td><td>讀取</td><td><code>GET /conversations/123</code></td></tr><tr><td>POST</td><td>建立 / 執行動作</td><td><code>POST /agents/run</code></td></tr><tr><td>PUT</td><td>整份替換</td><td><code>PUT /profiles/123</code></td></tr><tr><td>PATCH</td><td>局部修改</td><td><code>PATCH /profiles/123</code></td></tr><tr><td>DELETE</td><td>刪除</td><td><code>DELETE /memories/abc</code></td></tr></table></div>
+<div class="code-title">FastAPI：一個最小 AI endpoint</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class AgentRequest(BaseModel):
+    message: str
+    thread_id: str
+
+class AgentResponse(BaseModel):
+    answer: str
+
+@app.post("/agents/run", response_model=AgentResponse)
+async def run_agent(req: AgentRequest):
+    if not req.message.strip():
+        raise HTTPException(status_code=400, detail="message is empty")
+
+    # 真實系統會在這裡 load state → invoke agent → persist result
+    answer = f"Received: {req.message}"
+    return AgentResponse(answer=answer)</pre></div>
+<ul><li><strong>Path parameter</strong>：<code>/users/{user_id}</code></li><li><strong>Query parameter</strong>：<code>?limit=20&amp;offset=0</code></li><li><strong>Header</strong>：Authorization、Content-Type、trace ID</li><li><strong>Body</strong>：通常 JSON</li><li><strong>401 vs 403</strong>：沒有有效身份 vs 有身份但沒有權限</li><li><strong>429</strong>：rate limit；<strong>5xx</strong>：server-side failure</li><li><strong>Idempotency</strong>：重送 request 不應重複扣款 / 重複改機台參數</li></ul>
+
+<h3>1.3 SQL：你要真的會寫的範圍</h3>
+<div class="code-title">建立最小 conversation schema</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE conversations (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    title TEXT,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE messages (
+    id BIGSERIAL PRIMARY KEY,
+    conversation_id BIGINT NOT NULL REFERENCES conversations(id),
+    role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'tool')),
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
+);</pre></div>
+<div class="code-title">JOIN + GROUP BY：每個 user 有多少訊息？</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>SELECT
+    u.id,
+    u.email,
+    COUNT(m.id) AS message_count
+FROM users u
+LEFT JOIN conversations c ON c.user_id = u.id
+LEFT JOIN messages m ON m.conversation_id = c.id
+GROUP BY u.id, u.email
+ORDER BY message_count DESC;</pre></div>
+<p>至少要熟：<code>SELECT / WHERE / JOIN / GROUP BY / HAVING / ORDER BY / INSERT / UPDATE / DELETE</code>，再加上 subquery、CTE、transaction 的概念。</p>
+
+<h3>1.4 Relational schema：Primary Key / Foreign Key</h3>
+<div class="diagram"><div class="flow"><div class="node">users<br/><small>id = PK</small></div><div class="arrow">1 → N</div><div class="node">conversations<br/><small>user_id = FK</small></div><div class="arrow">1 → N</div><div class="node">messages<br/><small>conversation_id = FK</small></div></div></div>
+<p><strong>Primary Key</strong>唯一識別 row；<strong>Foreign Key</strong>把資料關係變成 DB 可強制檢查的 constraint。</p>
+
+<h3>1.5 Index：為什麼快？又為什麼不能亂加？</h3>
+<p>沒有合適 index，DB 可能需要掃大量 rows；B-tree index 讓它可快速縮小搜尋範圍。但 index 也要佔空間，而且每次 INSERT / UPDATE / DELETE 都要維護。</p>
+<div class="code-title">Composite index + EXPLAIN ANALYZE</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>CREATE INDEX idx_messages_conversation_created
+ON messages (conversation_id, created_at DESC);
+
+EXPLAIN ANALYZE
+SELECT *
+FROM messages
+WHERE conversation_id = 123
+ORDER BY created_at DESC
+LIMIT 20;</pre></div>
+<div class="callout warn"><strong>Composite index 順序很重要：</strong><code>(conversation_id, created_at)</code> 不等於所有查詢都能有效用到 <code>(created_at, conversation_id)</code>。</div>
+
+<h3>1.6 Transaction / ACID</h3>
+<div class="code-title">兩個更新要一起成功或一起失敗</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;
+-- 任一步失敗 → ROLLBACK</pre></div>
+<div class="table-scroll"><table><tr><th>A</th><td>Atomicity</td><td>一組操作全成或全敗</td></tr><tr><th>C</th><td>Consistency</td><td>constraint / invariant 前後仍成立</td></tr><tr><th>I</th><td>Isolation</td><td>同時交易不要互相看到不合理中間狀態</td></tr><tr><th>D</th><td>Durability</td><td>commit 後，即使 crash 也不該消失</td></tr></table></div>
+
+<h3>1.7 MVCC、Lock、Race Condition</h3>
+<p>PostgreSQL 用 MVCC 維護多個 row version，讓不同 transaction 看到符合隔離規則的 snapshot；一般讀寫因此可以減少互相阻塞。</p>
+<div class="diagram"><div class="flow"><div class="node">Txn A<br/>讀 version 1</div><div class="arrow">↔</div><div class="node">Txn B<br/>寫 version 2</div><div class="arrow">→</div><div class="node">Commit</div></div></div>
+<p>面試理解層級：知道 <span class="term">Read Committed</span>、row lock、deadlock、race condition 是什麼；不需要背 storage engine 細節。</p>
+<div class="source-note">官方參考：<a href="https://www.postgresql.org/docs/current/mvcc-intro.html">PostgreSQL MVCC</a></div>
+
+<h3>1.8 ORM、Driver、Connection Pool</h3>
+<div class="diagram"><div class="flow"><div class="node">Python App</div><div class="arrow">→</div><div class="node">SQLAlchemy ORM<br/><small>可選</small></div><div class="arrow">→</div><div class="node">psycopg Driver</div><div class="arrow">→</div><div class="node">Connection Pool</div><div class="arrow">→</div><div class="node">PostgreSQL</div></div></div>
+<div class="code-title">SQLAlchemy：Application code 的常見寫法（概念示例）</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from sqlalchemy import create_engine, text
+
+engine = create_engine(
+    "postgresql+psycopg://user:password@host:5432/app",
+    pool_size=10,
+    max_overflow=20,
+)
+
+with engine.begin() as conn:   # 自動 transaction
+    rows = conn.execute(
+        text("""
+            SELECT id, content
+            FROM messages
+            WHERE conversation_id = :cid
+            ORDER BY created_at DESC
+            LIMIT 20
+        """),
+        {"cid": 123},
+    ).mappings().all()</pre></div>
+<p><strong>Connection pool</strong>：避免每個 HTTP request 都重新建立昂貴 DB connection；但 pool 也不是越大越好。</p>
+
+<h3>1.9 SQL vs NoSQL：先問「資料存取模式」</h3>
+<div class="table-scroll"><table><tr><th>類型</th><th>代表</th><th>強項</th><th>AI 系統常見用途</th></tr><tr><td>Relational SQL</td><td>PostgreSQL、MySQL</td><td>關係、JOIN、transaction、constraint</td><td>user、conversation、job、metadata、business data</td></tr><tr><td>Document</td><td>MongoDB</td><td>JSON-like、schema 彈性</td><td>結構變化大的 document / event</td></tr><tr><td>Key-value</td><td>Redis、DynamoDB</td><td>依 key 快速存取、scale</td><td>cache、session、state、rate limit</td></tr><tr><td>Wide-column</td><td>Cassandra</td><td>高寫入吞吐、分散式</td><td>超大量 event 類 workload</td></tr><tr><td>Search engine</td><td>Elasticsearch / OpenSearch</td><td>全文搜尋、倒排索引、aggregation</td><td>keyword / log / hybrid retrieval</td></tr><tr><td>Warehouse / OLAP</td><td>BigQuery、Snowflake</td><td>大型分析 scan</td><td>analytics、offline eval、BI</td></tr></table></div>
+<div class="callout"><strong>選 DB 的方法：</strong>先問 query pattern、consistency、transaction、資料量、write/read pattern、latency、scale，再看產品名稱。</div>
+
+<h3>1.10 Redis：為什麼 Agent 系統常看到它？</h3>
+<div class="code-title">Cache-aside pattern</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>def get_product(product_id):
+    key = f"product:{product_id}"
+
+    cached = redis.get(key)
+    if cached:
+        return json.loads(cached)
+
+    product = db.query_product(product_id)
+    redis.setex(key, 300, json.dumps(product))  # TTL 5 min
+    return product</pre></div>
+<p>常見用途：cache、session、短期 state、rate limiting、distributed lock、queue / pub-sub。陷阱：cache invalidation、stale data、TTL、memory pressure。</p>
+
+<h3>1.11 Supabase 底層到底是什麼？</h3>
+<div class="diagram"><div class="flow"><div class="node">Your App / SDK</div><div class="arrow">→</div><div class="node">Envoy API Gateway</div><div class="arrow">→</div><div class="node">PostgREST / Auth / Realtime / Storage</div><div class="arrow">→</div><div class="node">PostgreSQL</div></div></div>
+<p>Supabase 的核心是<strong>完整 PostgreSQL</strong>。PostgREST 依 DB schema 產生 RESTful Data API；Auth 發 JWT 並可和 PostgreSQL Row Level Security（RLS）結合；Supavisor 負責 connection pooling。</p>
+<div class="code-title">Supabase Python SDK：method call 背後透過 Data API 操作 Postgres</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from supabase import create_client
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+result = (
+    supabase.table("messages")
+    .select("id, role, content")
+    .eq("conversation_id", 123)
+    .order("created_at", desc=True)
+    .limit(20)
+    .execute()
+)
+
+print(result.data)</pre></div>
+<div class="code-title">RLS：權限應在資料層強制，不是只寫 prompt</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "users can read own conversations"
+ON conversations
+FOR SELECT
+USING (auth.uid() = user_id);</pre></div>
+<div class="source-note">官方參考：<a href="https://supabase.com/docs/guides/getting-started/architecture">Supabase Architecture</a> · <a href="https://supabase.com/docs/guides/api">Data REST API</a></div>
+
+<div class="interview"><div class="q">Q：PostgreSQL、Redis、MongoDB 都能存 JSON，那為什麼不全部選一個？</div><p>因為產品選擇不是只看「能不能存」。要看 transaction / relation / query pattern / latency / consistency / scale。Postgres 適合主業務資料；Redis 適合快速、暫時性的 key-based data；MongoDB 適合自然以 document 聚合且 schema 常變的資料。</p></div>
+
+<div class="section-pager"><a href="#roadmap">← 先看全圖</a><a href="#vectordb">Vector DB →</a></div>
+</section>
+
+<section class="phase-title searchable" id="vectordb">
+<div class="kicker">PHASE 1 · MODULE 2</div>
+<h2>2. Vector Database Fundamentals</h2>
+<p>RAG 要學深，不能只停在「把 embedding 丟進 vector DB」。你至少要知道它如何找鄰居、index 為什麼是 approximate，以及 metadata filter 怎麼跟 vector search 配合。</p>
+<h3>2.1 Embedding 到底存什麼？</h3>
+<div class="diagram"><div class="flow"><div class="node">"packing pressure too low"</div><div class="arrow">→ Embedding Model →</div><div class="node">[0.12, -0.44, 0.08, ...]</div><div class="arrow">→</div><div class="node">Vector Index</div></div></div>
+<h3>2.2 Cosine、Dot Product、Euclidean</h3>
+<div class="table-scroll"><table><tr><th>Metric</th><th>直覺</th><th>注意</th></tr><tr><td>Cosine similarity</td><td>比較方向是否相近</td><td>常用於 normalized embeddings</td></tr><tr><td>Dot product</td><td>方向 + magnitude</td><td>模型定義會影響適用性</td></tr><tr><td>Euclidean (L2)</td><td>空間距離</td><td>依 embedding model / index 支援選用</td></tr></table></div>
+<h3>2.3 Exact Search vs ANN</h3>
+<div class="grid"><div class="card"><h4>Exact</h4><p>query 對所有 vectors 算距離。</p><p class="muted">準，但資料大時慢。</p></div><div class="card"><h4>ANN</h4><p>Approximate Nearest Neighbor：用 index 快速找很可能最近的候選。</p><p class="muted">用少量 recall 犧牲換 latency。</p></div></div>
+<h3>2.4 HNSW：面試要懂到哪？</h3>
+<p>把 HNSW 想成多層近鄰導航圖：上層節點少，大步跳到大致區域；逐層往下，在更密的圖裡找附近鄰居。</p>
+<div class="diagram"><div class="stack"><div class="layer"><strong>Layer 2：</strong>少量節點 → 大步導航</div><div class="layer"><strong>Layer 1：</strong>更多節點 → 縮小範圍</div><div class="layer"><strong>Layer 0：</strong>最密 → 找近鄰</div></div></div>
+<p>不需要手寫 HNSW，但要會說 index build / memory 成本較高，query recall 與 speed 可透過搜尋參數取捨。</p>
+<h3>2.5 IVF：另一種直覺</h3>
+<p>先把 vectors 分群；query 時先找相關 cluster，再只掃這些 cluster。掃得越多，recall 通常越高，但越慢。</p>
+<h3>2.6 pgvector：Postgres 也可以做 Vector Search</h3>
+<div class="code-title">概念 SQL：vector column + HNSW index</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE documents (
+    id BIGSERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    metadata JSONB,
+    embedding VECTOR(1536)
+);
+
+CREATE INDEX ON documents
+USING hnsw (embedding vector_cosine_ops);
+
+SELECT
+    id,
+    content,
+    1 - (embedding &lt;=&gt; :query_embedding) AS cosine_similarity
+FROM documents
+WHERE metadata-&gt;&gt;'product' = 'A'
+ORDER BY embedding &lt;=&gt; :query_embedding
+LIMIT 5;</pre></div>
+<h3>2.7 Dedicated Vector DB vs pgvector</h3>
+<div class="table-scroll"><table><tr><th>情境</th><th>pgvector 常很合理</th><th>Dedicated Vector DB 可能更合理</th></tr><tr><td>系統複雜度</td><td>已大量使用 Postgres，想少一個系統</td><td>vector retrieval 是核心 workload</td></tr><tr><td>資料關係</td><td>embedding 和 relational metadata 緊密</td><td>向量規模 / throughput 很大</td></tr><tr><td>團隊維運</td><td>團隊熟 Postgres</td><td>需要專門 distributed vector features</td></tr></table></div>
+<h3>2.8 看到 JD 的 Vector DB 名稱時怎麼看</h3>
+<p>Pinecone、Weaviate、Milvus、Qdrant、Elasticsearch/OpenSearch、pgvector API 不同，但面試更重要的是共同核心：</p>
+<div class="concept-map"><div class="node">Index<br/><small>HNSW / IVF</small></div><div class="node">Metric<br/><small>cosine / dot / L2</small></div><div class="node">Filter<br/><small>metadata / ACL</small></div><div class="node">Scale<br/><small>latency / recall / cost</small></div></div>
+<div class="interview"><div class="q">Q：你會直接把 PostgreSQL 換成 Pinecone / Milvus 嗎？</div><p>不會先看品牌。先量 vector 數量、QPS、latency、metadata filter、HA / scaling、team ops。如果 Postgres + pgvector 已滿足 SLA，少一個 distributed system 通常更簡單。</p></div>
+
+<div class="section-pager"><a href="#backend">← Backend & Data</a><a href="#rag">RAG 深度知識 →</a></div>
+</section>
+
+<section class="phase-title searchable" id="rag">
+<div class="kicker">PHASE 1 · MODULE 3</div>
+<h2>3. RAG 深度知識</h2>
+<p>你要從「知道 RAG 流程」提升到「能找出 retrieval、ranking、context、generation 到底哪裡壞掉」。</p>
+
+<h3>1.1 RAG 的完整資料流</h3>
+<div class="diagram">
+<div class="stack">
+  <div class="layer"><strong>離線：</strong>文件 → 清理 → Chunking → Embedding → Index / Vector DB</div>
+  <div class="layer"><strong>線上：</strong>Query → Query Rewrite → Retrieval → Filter → Rerank → Context Build → LLM → Citation / Validation</div>
+  <div class="layer"><strong>評估：</strong>Retrieval Recall → Ranking → Context Quality → Faithfulness → Answer Quality</div>
+</div>
+</div>
+
+<h3>1.2 Chunking：不是越小越好</h3>
+<div class="table-scroll"><table>
+<tr><th>策略</th><th>優點</th><th>缺點</th><th>適合</th></tr>
+<tr><td>固定 token</td><td>簡單、穩定</td><td>容易切斷語意</td><td>結構普通、快速 baseline</td></tr>
+<tr><td>Recursive / paragraph</td><td>保留語意</td><td>大小較不一致</td><td>大多數文件</td></tr>
+<tr><td>Semantic chunking</td><td>語意完整</td><td>成本高、參數敏感</td><td>高價值知識庫</td></tr>
+<tr><td>Parent-child</td><td>小塊找得準，大塊給上下文</td><td>索引與 serving 較複雜</td><td>長文件、policy、manual</td></tr>
+</table></div>
+<div class="callout"><strong>面試重點：</strong>chunk size 是 recall 與 context precision 的 trade-off。太小：語意破碎；太大：embedding 稀釋、context 塞雜訊。</div>
+
+<h3>1.3 Dense、Sparse、Hybrid Search</h3>
+<div class="grid3">
+<div class="card"><h4>Dense</h4><p>用 embedding 找「語意相近」。</p><p class="muted">強：同義詞、自然語言。弱：精準代碼、料號、罕見詞。</p></div>
+<div class="card"><h4>Sparse / BM25</h4><p>用詞頻與關鍵字匹配。</p><p class="muted">強：產品型號、錯誤碼、專有名詞。弱：語意改寫。</p></div>
+<div class="card"><h4>Hybrid</h4><p>Dense + Sparse 再融合排序。</p><p class="muted">企業知識庫常比單一方法穩。</p></div>
+</div>
+
+<h4>你要知道的融合方式</h4>
+<p><span class="term">Weighted Score</span>：把 dense / BM25 分數正規化後加權。<br/>
+<span class="term">RRF</span>（Reciprocal Rank Fusion）：不依賴不同系統分數尺度，只看排名，常比較穩。</p>
+
+<h3>1.4 Retrieval、Reranking 是兩件事</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">Query</div><div class="arrow">→</div>
+<div class="node">Retriever<br/><small>快，取 Top-50</small></div><div class="arrow">→</div>
+<div class="node">Reranker<br/><small>慢但準，排成 Top-5</small></div><div class="arrow">→</div>
+<div class="node">LLM Context</div>
+</div>
+</div>
+<p><strong>Retriever</strong>主要追求 recall；<strong>Reranker</strong>主要追求 precision。Cross-encoder reranker 通常比 embedding cosine 更能理解 query-document 關係，但成本較高。</p>
+
+<h3>1.5 Query Transformation</h3>
+<div class="table-scroll"><table>
+<tr><th>方法</th><th>在解什麼問題</th><th>風險</th></tr>
+<tr><td>Query Rewrite</td><td>原問題太口語、缺上下文</td><td>改壞原意</td></tr>
+<tr><td>Multi-query</td><td>一種說法找不到資料</td><td>成本與噪音增加</td></tr>
+<tr><td>HyDE</td><td>Query 太短，embedding 不夠好</td><td>假設性文件可能導偏</td></tr>
+<tr><td>Decomposition</td><td>複合問題需拆多步</td><td>流程變慢、錯誤會傳遞</td></tr>
+</table></div>
+
+<h3>1.6 Metadata Filtering</h3>
+<p>除了「語意」，企業 RAG 常必須先限制：部門、產品、版本、日期、權限、文件類型。這能大幅降低 search space，也能避免拿到不該看的資料。</p>
+<div class="callout warn"><strong>陷阱：</strong>不要把 access control 只交給 prompt。「請不要顯示機密文件」不是安全機制；權限應在 retrieval / data access 層強制。</div>
+
+<h3>1.7 RAG Failure Taxonomy：錯誤分類</h3>
+<div class="table-scroll"><table>
+<tr><th>層</th><th>症狀</th><th>檢查方式</th><th>可能修法</th></tr>
+<tr><td>Query</td><td>問題模糊、代名詞太多</td><td>看 rewrite 前後</td><td>clarification / rewrite</td></tr>
+<tr><td>Retrieval</td><td>正確文件沒進 Top-K</td><td>Recall@K</td><td>hybrid、chunk、embedding</td></tr>
+<tr><td>Ranking</td><td>找得到但排序差</td><td>MRR / NDCG</td><td>reranker</td></tr>
+<tr><td>Context</td><td>正確資訊被雜訊淹沒</td><td>context precision</td><td>縮小、去重、壓縮</td></tr>
+<tr><td>Generation</td><td>context 有答案卻答錯</td><td>faithfulness / manual inspect</td><td>prompt、model、structured output</td></tr>
+</table></div>
+
+<h3>1.8 重要 Retrieval Metrics</h3>
+<div class="grid">
+<div class="card"><h4>Recall@K</h4><p>相關文件有沒有被找進前 K 筆？</p><p><code>找到的 relevant / 全部 relevant</code></p></div>
+<div class="card"><h4>Precision@K</h4><p>前 K 筆裡有多少真的 relevant？</p><p><code>relevant in top K / K</code></p></div>
+<div class="card"><h4>MRR</h4><p>第一個正確答案排多前面？</p><p>適合「一個正確答案」型搜尋。</p></div>
+<div class="card"><h4>NDCG</h4><p>考慮多個結果的相關程度與排名。</p><p>適合 relevance 有高低等級。</p></div>
+</div>
+
+<h3>1.9 GraphRAG 與 Agentic RAG</h3>
+<div class="grid">
+<div class="card"><h4>GraphRAG</h4><p>當問題依賴<strong>實體關係與多跳關聯</strong>時，把 entity / relation 建成 graph，再做 traversal / community summary。</p><p class="muted">不是「RAG 加一張圖」；價值在於跨文件關係與 global question。</p></div>
+<div class="card"><h4>Agentic RAG</h4><p>讓 agent 決定要不要搜、搜哪裡、要不要改 query、是否多輪 retrieval。</p><p class="muted">更彈性，但也更慢、更難評估、更不 deterministic。</p></div>
+</div>
+
+
+<h3>3.10 Code：一條可 debug 的 RAG pipeline</h3>
+<p>不要把 retrieval、rerank、generation 全包成一個黑盒。拆開後 production 答錯才知道錯在哪。</p>
+<div class="code-title">Python：retrieve / rerank / generate 分層</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>def answer(query: str):
+    rewritten = rewrite_query(query)
+
+    candidates = retriever.search(
+        rewritten,
+        k=50,
+        filters={"product": "A"},
+    )
+
+    ranked = reranker.rank(query, candidates)
+    context = ranked[:5]
+
+    response = llm.invoke({
+        "question": query,
+        "context": context,
+        "instruction": "Answer only from context; cite evidence."
+    })
+
+    return {
+        "answer": response,
+        "retrieved_ids": [x.id for x in candidates],
+        "context_ids": [x.id for x in context],
+    }</pre></div>
+<h3>3.11 LangChain：把 retrieval 包成 Agent Tool</h3>
+<p>目前 LangChain 高階 agent API 是 <code>create_agent</code>。如果 RAG 是可選能力，可包成 tool；若流程一定要先 retrieve，deterministic workflow 通常更合理。</p>
+<div class="code-title">LangChain create_agent + retrieval tool（簡化）</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from langchain.agents import create_agent
+from langchain.tools import tool
+
+@tool
+def search_knowledge_base(query: str) -&gt; str:
+    """Search internal manufacturing knowledge."""
+    docs = retriever.search(query, k=5)
+    return "\\n\\n".join(
+        f"[{d.id}] {d.text}" for d in docs
+    )
+
+agent = create_agent(
+    model="openai:YOUR_MODEL",
+    tools=[search_knowledge_base],
+    system_prompt=(
+        "Use the knowledge-base tool for factual manufacturing questions. "
+        "Cite document IDs and do not invent unavailable evidence."
+    ),
+)
+
+result = agent.invoke({
+    "messages": [
+        {"role": "user", "content": "Why can low packing pressure cause shrinkage?"}
+    ]
+})</pre></div>
+<div class="source-note">API 方向參考：<a href="https://docs.langchain.com/oss/python/langchain/agents">LangChain Agents</a></div>
+
+<div class="interview">
+<div class="q">Q：RAG 回答錯了，你怎麼 debug？</div>
+<p><strong>好回答框架：</strong>先分層，不直接換模型。確認 query 是否清楚 → gold evidence 有沒有被 retriever 找到 → reranker 是否把它排前面 → context 是否含正確內容且沒有互相衝突 → LLM 是否 faithful。每層用對應 metric 與 trace 證明。</p>
+<div class="follow">追問：如果 Recall@10 很高但答案還是錯？</div>
+<p>那問題多半不是 retrieval recall，而可能是 ranking、context clutter、prompt grounding 或 generation；再檢查正確 chunk 排名、context precision 與 faithfulness。</p>
+</div>
+
+<div class="section-pager"><a href="#vectordb">← Vector DB</a><a href="#agent">Agent Architecture →</a></div>
+</section>
+
+<section class="phase-title searchable" id="agent">
+<div class="kicker">PHASE 1 · MODULE 4</div>
+<h2>4. AI Agent Architecture</h2>
+<p>Agent 的重點不是「LLM 會呼叫工具」，而是<strong>如何管理決策、狀態、工具、失敗與停止條件</strong>。</p>
+
+<h3>2.1 Agent 的核心組成</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">Model<br/><small>Reason / Select</small></div><div class="arrow">+</div>
+<div class="node">Context<br/><small>Prompt / Memory</small></div><div class="arrow">+</div>
+<div class="node">Tools</div><div class="arrow">+</div>
+<div class="node">State</div><div class="arrow">+</div>
+<div class="node">Control Flow</div>
+</div>
+</div>
+<p>一句話記：<strong>Agent = Model + Context + Tools + State + Control Flow</strong>。</p>
+
+<h3>2.2 Workflow vs Agent</h3>
+<div class="table-scroll"><table>
+<tr><th></th><th>Workflow</th><th>Agent</th></tr>
+<tr><td>流程</td><td>工程師預先定義</td><td>模型在 runtime 決定</td></tr>
+<tr><td>可預測性</td><td>高</td><td>較低</td></tr>
+<tr><td>彈性</td><td>較低</td><td>高</td></tr>
+<tr><td>成本 / Latency</td><td>容易控制</td><td>較難控制</td></tr>
+<tr><td>適合</td><td>SOP、固定 business rule</td><td>路徑不確定、需探索</td></tr>
+</table></div>
+<div class="callout ok"><strong>Senior 判斷：</strong>如果問題可用 deterministic workflow 解決，通常不要為了「Agent」而 Agent。</div>
+
+<h3>2.3 常見 Agent Pattern</h3>
+<div class="grid">
+<div class="card"><h4>Router</h4><p>先分類，再分流到不同 chain / tool / specialist。</p></div>
+<div class="card"><h4>Planner → Executor</h4><p>先拆任務，再逐步執行。適合 multi-step 任務。</p></div>
+<div class="card"><h4>Supervisor → Workers</h4><p>Supervisor 分派給多個 specialist agent。</p></div>
+<div class="card"><h4>Reflection</h4><p>產生結果後再檢查、修正。品質可能提高，但 token / latency 上升。</p></div>
+</div>
+
+<h3>2.4 Tool Calling：真正會被問的是可靠性</h3>
+<p>工具定義要清楚：名稱、用途、參數 schema、限制、錯誤回傳。LLM 只負責<strong>選擇與填參數</strong>，真正權限與商業規則仍應由 backend enforcement。</p>
+<div class="diagram">
+<div class="flow">
+<div class="node">LLM chooses tool</div><div class="arrow">→</div>
+<div class="node">Schema validation</div><div class="arrow">→</div>
+<div class="node">Auth / Policy</div><div class="arrow">→</div>
+<div class="node">Execute</div><div class="arrow">→</div>
+<div class="node">Normalize result</div>
+</div>
+</div>
+
+<h4>Tool failure 要考慮</h4>
+<div class="table-scroll"><table>
+<tr><th>失敗</th><th>處理</th></tr>
+<tr><td>參數格式錯</td><td>schema validation + structured retry</td></tr>
+<tr><td>暫時性 API failure</td><td>retry + exponential backoff + timeout</td></tr>
+<tr><td>重複執行有副作用</td><td>idempotency key / transaction</td></tr>
+<tr><td>高風險操作</td><td>human approval / policy gate</td></tr>
+<tr><td>工具回傳超長</td><td>摘要、filter、structured extraction</td></tr>
+</table></div>
+
+<h3>2.5 State 與 Memory 不一樣</h3>
+<div class="grid">
+<div class="card"><h4>State</h4><p>這一次 workflow 執行中的必要資訊。</p><p class="muted">例：目前步驟、tool result、retry count、user intent。</p></div>
+<div class="card"><h4>Memory</h4><p>跨 turn / 跨 session 想保留的資訊。</p><p class="muted">例：使用者偏好、長期任務上下文。</p></div>
+</div>
+<p>記憶不是越多越好。長期 memory 要考慮 relevance、過期、衝突、隱私與是否真的值得寫入。</p>
+
+<h3>2.6 Multi-Agent：什麼時候值得？</h3>
+<div class="callout">
+<p><strong>適合：</strong>不同 agent 有明確不同工具 / 權限 / domain、可平行處理、或需要 ownership boundary。</p>
+<p><strong>不適合：</strong>只是把一條 chain 拆成很多「角色」，結果多了協調成本，卻沒有能力邊界。</p>
+</div>
+
+<h3>2.7 Determinism 與 Guardrails</h3>
+<p>Agent 越自由，越要把「不能錯」的部分從 LLM 移出去。</p>
+<div class="stack diagram">
+<div class="layer"><strong>LLM 適合：</strong>理解、分類、生成、候選方案</div>
+<div class="layer"><strong>程式控制：</strong>schema、workflow transition、retry limit、timeout、business rules</div>
+<div class="layer"><strong>安全控制：</strong>RBAC、approval、sandbox、audit log</div>
+</div>
+
+<h3>2.8 Termination：怎麼避免 Agent 無限跑？</h3>
+<p>常見停止條件：任務完成、達最大 step、達 token / cost budget、工具連續失敗、confidence 不足轉人工、偵測循環。</p>
+
+
+<h3>4.9 LangChain vs LangGraph：現在怎麼分工？</h3>
+<div class="table-scroll"><table><tr><th>層級</th><th>現在適合用什麼</th><th>你控制什麼</th></tr><tr><td>高階 Agent harness</td><td><code>langchain.agents.create_agent</code></td><td>model、tools、system prompt、middleware、context schema、checkpointer</td></tr><tr><td>自訂 orchestration</td><td><code>langgraph.graph.StateGraph</code></td><td>state、nodes、edges、branch、loop、parallelism、interrupt、persistence</td></tr></table></div>
+<p>常見 tool-calling loop 就夠時用高階 API；需要精準控制 SOP、branch、retry、approval、多階段 routing 時用 LangGraph。</p>
+
+<h3>4.10 四個最容易混的概念：State / Context / Checkpoint / Store</h3>
+<div class="concept-map"><div class="node"><strong>State</strong><br/><small>graph 執行中會被 nodes 更新</small></div><div class="node"><strong>Runtime Context</strong><br/><small>這次 invocation 的依賴 / config</small></div><div class="node"><strong>Checkpointer</strong><br/><small>thread-scoped state snapshots</small></div><div class="node"><strong>Store</strong><br/><small>cross-thread long-term data</small></div></div>
+<div class="table-scroll"><table><tr><th>東西</th><th>例子</th><th>生命週期</th></tr><tr><td>State</td><td>messages、current defect、retry_count、retrieved_docs</td><td>graph step 間傳遞</td></tr><tr><td>Context</td><td>user_id、plant_id、DB dependency、model config</td><td>每次 invoke 傳入；不是歷史記憶</td></tr><tr><td>Checkpointer</td><td>conversation thread 的 state checkpoints</td><td>同一 thread 可 resume / multi-turn</td></tr><tr><td>Store</td><td>跨 conversation 的偏好、長期 facts</td><td>跨 thread 持久化</td></tr></table></div>
+
+<h3>4.11 LangGraph State：node 不必回傳整份 state</h3>
+<div class="code-title">StateGraph + custom state</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from typing_extensions import TypedDict
+from langgraph.graph import StateGraph, START, END
+
+class State(TypedDict):
+    user_query: str
+    defect: str
+    retry_count: int
+    answer: str
+
+def classify_defect(state: State):
+    return {"defect": "short_shot"}   # partial update
+
+def answer(state: State):
+    return {"answer": f"Diagnose {state['defect']} for: {state['user_query']}"}
+
+builder = StateGraph(State)
+builder.add_node("classify", classify_defect)
+builder.add_node("answer", answer)
+builder.add_edge(START, "classify")
+builder.add_edge("classify", "answer")
+builder.add_edge("answer", END)
+graph = builder.compile()</pre></div>
+
+<h3>4.12 Reducer：state key 是覆蓋還是累加？</h3>
+<p>沒有指定 reducer 時，新值覆蓋舊值；要累加 list，要明確定義 reducer。</p>
+<div class="code-title">用 reducer 累積 observations</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from operator import add
+from typing import Annotated
+from typing_extensions import TypedDict
+
+class State(TypedDict):
+    status: str                         # overwrite
+    observations: Annotated[list[str], add]  # append / merge
+
+def inspect_part(state: State):
+    return {"observations": ["flash near gate"]}</pre></div>
+<div class="callout warn"><strong>面試陷阱：</strong>merge reducer 下回傳空 list 通常不等於清空；要理解 reducer semantics。</div>
+
+<h3>4.13 MessagesState：conversation history 的典型 state</h3>
+<div class="code-title">MessagesState + 自訂欄位</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from langgraph.graph import MessagesState
+
+class AgentState(MessagesState):
+    defect: str
+    retrieved_doc_ids: list[str]
+    retry_count: int</pre></div>
+<p><code>MessagesState</code> 已替 <code>messages</code> 使用適合訊息更新的 reducer。</p>
+
+<h3>4.14 Flow control：Conditional Edges</h3>
+<div class="code-title">Conditional edge：只負責決定下一個 node</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>def route_after_diagnosis(state: AgentState):
+    if state["retry_count"] &gt;= 2:
+        return "human_review"
+    if not state.get("defect"):
+        return "ask_clarification"
+    return "recommend"
+
+builder.add_conditional_edges(
+    "diagnose",
+    route_after_diagnosis,
+    {
+        "human_review": "human_review",
+        "ask_clarification": "ask_clarification",
+        "recommend": "recommend",
+    },
+)</pre></div>
+
+<h3>4.15 Command：同時 update state + routing</h3>
+<div class="code-title">Command</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from typing import Literal
+from langgraph.types import Command
+
+def validate(
+    state: AgentState,
+) -&gt; Command[Literal["recommend", "human_review"]]:
+    if state["retry_count"] &gt;= 2:
+        return Command(
+            update={"retry_count": state["retry_count"] + 1},
+            goto="human_review",
+        )
+
+    return Command(
+        update={"retry_count": state["retry_count"] + 1},
+        goto="recommend",
+    )</pre></div>
+<p>只 routing → conditional edge；同時更新 state 並 routing → <code>Command</code>。</p>
+
+<h3>4.16 Runtime Context：不要把所有東西都塞進 State</h3>
+<p><strong>State 是 workflow data；Context 是 invocation dependency / runtime config。</strong></p>
+<div class="code-title">context_schema + Runtime</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from dataclasses import dataclass
+from langgraph.graph import StateGraph
+from langgraph.runtime import Runtime
+
+@dataclass
+class Context:
+    user_id: str
+    plant_id: str
+
+def load_policy(state: AgentState, runtime: Runtime[Context]):
+    plant_id = runtime.context.plant_id
+    return {"retrieved_doc_ids": [f"policy:{plant_id}:001"]}
+
+builder = StateGraph(AgentState, context_schema=Context)
+# ... add nodes / edges ...
+graph = builder.compile()
+
+graph.invoke(
+    {"messages": [{"role": "user", "content": "Check this defect"}]},
+    context=Context(user_id="u123", plant_id="KHH"),
+)</pre></div>
+
+<h3>4.17 Short-term Memory：Checkpointer + thread_id</h3>
+<div class="code-title">同一 thread_id 保存 conversation continuity</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from langchain.agents import create_agent
+from langgraph.checkpoint.memory import InMemorySaver
+
+agent = create_agent(
+    model="openai:YOUR_MODEL",
+    tools=[],
+    checkpointer=InMemorySaver(),
+)
+
+config = {"configurable": {"thread_id": "thread-123"}}
+
+agent.invoke(
+    {"messages": [{"role": "user", "content": "My machine is M-08"}]},
+    config=config,
+)
+
+agent.invoke(
+    {"messages": [{"role": "user", "content": "Which machine did I mention?"}]},
+    config=config,
+)</pre></div>
+<div class="callout"><strong>重點：</strong><code>thread_id</code> 是 conversation scope；真正把 state 保存下來的是 <code>checkpointer</code>。In-memory 版本 process restart 就沒了。</div>
+
+<h3>4.18 Long-term Memory：Store，不要和 thread history 混在一起</h3>
+<div class="code-title">Store：跨 thread 的 application memory</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from langgraph.store.memory import InMemoryStore
+
+store = InMemoryStore()
+namespace = ("users", "u123")
+
+store.put(
+    namespace,
+    "profile",
+    {"preferred_language": "zh-TW", "default_plant": "KHH"},
+)
+
+profile = store.get(namespace, "profile")</pre></div>
+<p>Production 真正的設計問題：什麼值得記？何時更新？如何處理過期、衝突、privacy？</p>
+
+<h3>4.19 State persistence 到 PostgreSQL</h3>
+<div class="code-title">Postgres-backed checkpointer</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from langgraph.checkpoint.postgres import PostgresSaver
+
+with PostgresSaver.from_conn_string(DB_URI) as checkpointer:
+    checkpointer.setup()
+    graph = builder.compile(checkpointer=checkpointer)
+
+    config = {"configurable": {"thread_id": "thread-123"}}
+    graph.invoke(
+        {"messages": [{"role": "user", "content": "Continue diagnosis"}]},
+        config=config,
+    )</pre></div>
+<p>這把 DB 知識接回 Agent：checkpoint 也是 persistence，需要 connection、index、retention 與 storage cost。</p>
+
+<h3>4.20 Orchestrator-Worker / Parallelism</h3>
+<p>如果 runtime 才知道要產生幾個 workers，可以用 <code>Send</code> 動態 fan-out。</p>
+<div class="code-title">Send：動態建立 worker work items</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from langgraph.types import Send
+
+def assign_workers(state):
+    return [
+        Send("worker", {"task": task})
+        for task in state["planned_tasks"]
+    ]
+
+builder.add_conditional_edges("planner", assign_workers)</pre></div>
+
+<h3>4.21 Human-in-the-loop：高風險動作要 pause</h3>
+<div class="code-title">interrupt：要求人工批准</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>from langgraph.types import interrupt
+
+def approval_node(state):
+    approved = interrupt({
+        "action": "change_machine_parameter",
+        "proposal": state["proposal"],
+    })
+
+    if not approved:
+        return {"status": "rejected"}
+    return {"status": "approved"}</pre></div>
+
+<h3>4.22 Production Agent 的 State 該放什麼？</h3>
+<div class="table-scroll"><table><tr><th>適合放 State</th><th>不建議直接塞 State</th></tr><tr><td>messages、current step、tool observations、retrieved doc IDs、retry count、validated structured results</td><td>DB connection、巨大原始檔、完整無用 tool payload、secrets</td></tr></table></div>
+<div class="callout ok"><strong>Senior 思維：</strong>State 不是垃圾桶。考慮 serialization、checkpoint 大小、resume、privacy、reducers；大資料通常存 DB，只在 state 放 ID。</div>
+<div class="source-note">目前官方概念：<a href="https://docs.langchain.com/oss/python/langgraph/graph-api">LangGraph Graph API</a> · <a href="https://docs.langchain.com/oss/python/langgraph/persistence">Persistence</a> · <a href="https://docs.langchain.com/oss/python/concepts/memory">Memory</a></div>
+
+<div class="interview">
+<div class="q">Q：什麼時候你不會用 Agent？</div>
+<p>如果流程穩定、business rule 清楚、需要高可預測性或低延遲，我會用 deterministic workflow。只有當 runtime 決策空間真的不確定，且 Agent 的彈性能帶來價值時才使用。</p>
+<div class="follow">追問：Multi-agent 一定比 single agent 好嗎？</div>
+<p>不一定。Multi-agent 多了 routing、shared state、coordination、evaluation 成本。只有能力邊界清楚、可平行、或權限隔離有價值時才值得。</p>
+</div>
+
+<div class="section-pager"><a href="#rag">← RAG 深度知識</a><a href="#llm">LLM Fundamentals →</a></div>
+</section>
+
+<section class="phase-title searchable" id="llm">
+<div class="kicker">PHASE 1 · MODULE 5</div>
+<h2>5. LLM / Transformer Fundamentals</h2>
+<p>目標不是做 LLM research，而是面試追到底時，你知道模型內部發生什麼。</p>
+
+<h3>3.1 從文字到下一個 token</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">Text</div><div class="arrow">→</div>
+<div class="node">Tokenizer</div><div class="arrow">→</div>
+<div class="node">Token IDs</div><div class="arrow">→</div>
+<div class="node">Embeddings</div><div class="arrow">→</div>
+<div class="node">Transformer Blocks</div><div class="arrow">→</div>
+<div class="node">Logits</div><div class="arrow">→</div>
+<div class="node">Sampling</div>
+</div>
+</div>
+
+<h3>3.2 Self-Attention：淺白版</h3>
+<p>每個 token 都會問：「在理解我時，我現在應該看句子裡哪些 token？」</p>
+<div class="table-scroll"><table>
+<tr><th>Q</th><td>我正在找什麼？</td></tr>
+<tr><th>K</th><td>我有什麼特徵可以被別人找到？</td></tr>
+<tr><th>V</th><td>如果別人關注我，我要提供什麼內容？</td></tr>
+</table></div>
+<p>核心計算可理解成：<code>Attention(Q,K,V) = softmax(QKᵀ / √d) V</code>。你不一定要手算，但要知道 QK 決定「看誰」，V 決定「拿什麼資訊」。</p>
+
+<h3>3.3 Multi-Head Attention</h3>
+<p>不同 head 可以同時學不同關係，例如語法依賴、指代、位置或語意關係。最後再合併。</p>
+
+<h3>3.4 Position：Transformer 怎麼知道順序？</h3>
+<p>純 attention 本身不懂 token 順序，所以需要 positional information。現代 LLM 常見 RoPE 類方法，將相對位置信息帶進 attention。</p>
+
+<h3>3.5 Context Window 與 Lost in the Middle</h3>
+<p>Context window 是模型單次能處理的 token 範圍，但<strong>塞得下 ≠ 用得好</strong>。上下文太長會增加 latency / cost，也可能讓重要資訊被雜訊稀釋；模型對中間資訊的利用有時也較弱。</p>
+
+<h3>3.6 KV Cache</h3>
+<div class="callout">
+<p>自回歸生成時，前面 token 的 Key / Value 不需要每生成一個 token 都重新算。把它們 cache 起來，就能加快 inference。</p>
+<p><strong>Trade-off：</strong>速度換記憶體。Context 越長、batch 越大，KV cache 佔用越高。</p>
+</div>
+
+<h3>3.7 Temperature / Top-k / Top-p</h3>
+<div class="table-scroll"><table>
+<tr><th>參數</th><th>意思</th><th>直覺</th></tr>
+<tr><td>Temperature</td><td>調整 logits 分布尖銳程度</td><td>低：穩定；高：多樣</td></tr>
+<tr><td>Top-k</td><td>只從機率最高的 k 個 token 選</td><td>硬切候選數</td></tr>
+<tr><td>Top-p</td><td>選到累積機率達 p 的候選集合</td><td>候選數會動態變</td></tr>
+</table></div>
+
+<h3>3.8 SFT、RLHF、DPO</h3>
+<div class="table-scroll"><table>
+<tr><th>方法</th><th>做什麼</th></tr>
+<tr><td>Pretraining</td><td>大量資料學一般語言與知識</td></tr>
+<tr><td>SFT</td><td>用 input-output 範例教模型遵循任務</td></tr>
+<tr><td>RLHF</td><td>透過人類偏好與 reward model 進一步對齊</td></tr>
+<tr><td>DPO</td><td>直接用 preferred / rejected pairs 做偏好最佳化，流程較簡化</td></tr>
+</table></div>
+
+<h3>3.9 Fine-tuning、RAG、Prompt 怎麼選？</h3>
+<div class="table-scroll"><table>
+<tr><th>需求</th><th>優先方案</th></tr>
+<tr><td>知識常更新</td><td>RAG</td></tr>
+<tr><td>需要引用來源</td><td>RAG</td></tr>
+<tr><td>改輸出格式 / 任務習慣</td><td>Prompt / SFT</td></tr>
+<tr><td>特定風格或穩定 task behavior</td><td>Fine-tuning</td></tr>
+<tr><td>少量規則</td><td>Prompt / deterministic code</td></tr>
+</table></div>
+
+<h3>3.10 LoRA、Quantization、MoE</h3>
+<div class="grid">
+<div class="card"><h4>LoRA</h4><p>凍結原權重，只訓練低秩 adapter，降低 fine-tuning 成本。</p></div>
+<div class="card"><h4>Quantization</h4><p>降低權重 / activation 精度，省記憶體、加速，但可能掉準確率。</p></div>
+<div class="card"><h4>MoE</h4><p>很多 expert，但每個 token 只啟用部分 expert；擴大模型容量又控制計算量。</p></div>
+</div>
+
+
+<h3>5.11 Code：Self-Attention 其實就是「算分數 → softmax → 加權 V」</h3>
+<p>這是概念版，不是 production Transformer 實作；目的是讓你面試時真的知道公式每一步在做什麼。</p>
+<div class="code-title">NumPy 風格概念 code</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>import numpy as np
+
+# shape: [num_tokens, head_dim]
+Q = ...
+K = ...
+V = ...
+
+d = Q.shape[-1]
+
+# 1. 每個 token 對其他 token 的相關分數
+scores = (Q @ K.T) / np.sqrt(d)
+
+# 2. 轉成 attention weights
+weights = softmax(scores, axis=-1)
+
+# 3. 用 weights 對 V 做加權平均
+output = weights @ V</pre></div>
+<p>記法：<strong>QKᵀ 決定「看誰」；V 決定「從那個 token 取什麼資訊」。</strong></p>
+
+<h3>5.12 Code：Temperature 改的是機率分布，不是「讓模型突然會創意」</h3>
+<div class="code-title">Sampling 概念</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>def probabilities(logits, temperature=1.0):
+    scaled = logits / temperature
+    return softmax(scaled)
+
+# temperature &lt; 1 → 分布更尖，較常選高機率 token
+# temperature &gt; 1 → 分布更平，低機率 token 機會增加</pre></div>
+<div class="callout"><strong>面試連回工程：</strong>需要 structured tool call / deterministic classification 時，通常偏低 randomness；creative generation 才可能接受更高多樣性。</div>
+
+<div class="interview">
+<div class="q">Q：為什麼把更多文件塞進 context，不一定更準？</div>
+<p>因為更多 context 同時帶來更多噪音、衝突資訊與 attention 競爭；也增加 lost-in-the-middle、latency 與 cost。RAG 的目標不是最大 context，而是最高 quality / relevance 的 context。</p>
+</div>
+
+<div class="section-pager"><a href="#agent">← Agent Architecture</a><a href="#eval">AI Evaluation →</a></div>
+</section>
+
+<section class="phase-title searchable" id="eval">
+<div class="kicker">PHASE 2 · MODULE 6</div>
+<h2>6. AI Evaluation：把 Demo 變成工程</h2>
+<p>Evaluation 是你最值得建立差異化的地方。Senior 不只說「感覺變好」，而是能建立<strong>可重現的品質閉環</strong>。</p>
+
+<h3>4.1 Evaluation Flywheel</h3>
+<div class="diagram">
+<div class="flow">
+<div class="node">Production Logs</div><div class="arrow">→</div>
+<div class="node">Failure Mining</div><div class="arrow">→</div>
+<div class="node">Golden Dataset</div><div class="arrow">→</div>
+<div class="node">Offline Eval</div><div class="arrow">→</div>
+<div class="node">Experiment</div><div class="arrow">→</div>
+<div class="node">Regression Test</div><div class="arrow">→</div>
+<div class="node">Deploy</div>
+</div>
+</div>
+
+<h3>4.2 Golden Dataset 怎麼做</h3>
+<p>好的 eval set 不是隨便抽 100 題。要覆蓋：</p>
+<div class="table-scroll"><table>
+<tr><th>切面</th><th>例子</th></tr>
+<tr><td>常見 case</td><td>80% 使用者日常問題</td></tr>
+<tr><td>Edge case</td><td>模糊 query、衝突資料、工具失敗</td></tr>
+<tr><td>高風險 case</td><td>可能造成錯誤操作或安全問題</td></tr>
+<tr><td>Regression case</td><td>過去曾壞掉、已修過的 case</td></tr>
+<tr><td>長尾</td><td>罕見但真實存在的使用情境</td></tr>
+</table></div>
+
+<h3>4.3 要分層評估，不要只看 final answer</h3>
+<div class="stack diagram">
+<div class="layer"><strong>RAG：</strong>Recall@K、MRR、NDCG、context precision</div>
+<div class="layer"><strong>Generation：</strong>Correctness、Faithfulness、Relevance、Style / Format</div>
+<div class="layer"><strong>Agent：</strong>Task success、Tool selection、Argument accuracy、Trajectory efficiency</div>
+<div class="layer"><strong>System：</strong>Latency、Cost、Error rate、Fallback rate</div>
+</div>
+
+<h3>4.4 LLM-as-a-Judge</h3>
+<p>優點：快速、可 scale、適合語意型評估。缺點：judge 也有 bias、不穩、可能被答案長度或措辭影響。</p>
+<div class="callout warn"><strong>做法：</strong>用清楚 rubric、structured score、pairwise compare、校準 human labels，並固定 judge model/version。</div>
+
+<h3>4.5 Pairwise vs Absolute Scoring</h3>
+<div class="table-scroll"><table>
+<tr><th></th><th>Absolute</th><th>Pairwise</th></tr>
+<tr><td>問題</td><td>「給 1–5 分」</td><td>「A、B 哪個更好？」</td></tr>
+<tr><td>穩定性</td><td>較受尺度漂移影響</td><td>通常較穩</td></tr>
+<tr><td>用途</td><td>看絕對門檻</td><td>A/B prompt、model、pipeline</td></tr>
+</table></div>
+
+<h3>4.6 Agent Evaluation 不只看答案</h3>
+<p>同樣答對，走 2 步跟走 12 步完全不同。要看：</p>
+<div class="table-scroll"><table>
+<tr><th>維度</th><th>例子</th></tr>
+<tr><td>Task success</td><td>任務真的完成嗎？</td></tr>
+<tr><td>Tool correctness</td><td>選對工具嗎？參數對嗎？</td></tr>
+<tr><td>Trajectory quality</td><td>有沒有繞路、重複、循環？</td></tr>
+<tr><td>Safety</td><td>有沒有越權、危險操作？</td></tr>
+<tr><td>Efficiency</td><td>步數、token、cost、latency</td></tr>
+</table></div>
+
+<h3>4.7 Offline vs Online</h3>
+<div class="grid">
+<div class="card"><h4>Offline</h4><p>快、可重現、適合 regression。</p><p class="muted">問題：dataset 可能跟真實流量 drift。</p></div>
+<div class="card"><h4>Online</h4><p>看真實 user behavior 與 production outcome。</p><p class="muted">問題：風險較高、需要 guardrail。</p></div>
+</div>
+
+<h3>4.8 Evaluation Release Gate</h3>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>if critical_safety_failures > 0:
+    block_release()
+elif task_success drops > tolerance:
+    block_release()
+elif latency_p95 > SLA:
+    investigate()
+else:
+    canary_release()</pre></div>
+
+
+<h3>6.9 Code：Evaluation 不要只存一個 score</h3>
+<div class="code-title">最小 golden dataset + regression runner</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>GOLDEN = [
+    {
+        "id": "short-shot-001",
+        "input": "Part is not fully filled near end of flow",
+        "expected_defect": "short_shot",
+        "required_evidence": ["flow_length", "injection_pressure"],
+    },
+]
+
+def evaluate_case(agent, case):
+    result = agent.invoke(case["input"])
+    return {
+        "id": case["id"],
+        "task_success": result["defect"] == case["expected_defect"],
+        "tool_calls": result.get("tool_calls", []),
+        "latency_ms": result["latency_ms"],
+        "cost_usd": result["cost_usd"],
+    }
+
+results = [evaluate_case(agent, c) for c in GOLDEN]
+success_rate = sum(r["task_success"] for r in results) / len(results)
+assert success_rate &gt;= 0.95</pre></div>
+<h3>6.10 Agent trace 要能回答「哪一步錯」</h3>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>trace = {
+    "router": {"decision": "diagnosis"},
+    "retrieval": {"doc_ids": ["sop-12", "sop-18"]},
+    "tool": {
+        "name": "change_packing_pressure",
+        "args": {"delta": 5},
+        "status": "success",
+    },
+    "final": {"answer": "..."},
+}</pre></div>
+<p>有 trace 才能分別評估 router、retrieval、tool-selection、arguments、trajectory、final answer。</p>
+
+<div class="interview">
+<div class="q">Q：你怎麼知道新 prompt 真的比較好？</div>
+<p>先定義目標 metric 與 golden set，用相同資料跑 baseline 與 candidate；對語意品質可用 human-calibrated LLM judge / pairwise，對 retrieval 和 agent 行為則用 deterministic metrics。最後看顯著 regression、cost、latency，再做小流量 online validation。</p>
+</div>
+
+<div class="section-pager"><a href="#llm">← LLM Fundamentals</a><a href="#system">AI System Design →</a></div>
+</section>
+
+<section class="phase-title searchable" id="system">
+<div class="kicker">PHASE 2 · MODULE 7</div>
+<h2>7. AI System Design</h2>
+<p>System Design 面試不是畫很多方塊，而是從 requirements 出發，解釋每個方塊為什麼存在。</p>
+
+<h3>5.1 一個完整 Enterprise AI Assistant</h3>
+<div class="diagram">
+<svg viewBox="0 0 1040 560" width="100%" role="img" aria-label="Enterprise AI architecture diagram">
+  <defs>
+    <style>
+      .b{fill:#142044;stroke:#4462a8;stroke-width:2}
+      .t{fill:#edf2ff;font:16px sans-serif}
+      .s{fill:#aebee7;font:13px sans-serif}
+      .l{stroke:#7ea2ff;stroke-width:2;marker-end:url(#a)}
+    </style>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#7ea2ff"/></marker>
+  </defs>
+  <rect x="30" y="225" rx="16" ry="16" width="130" height="80" class="b"/><text x="95" y="258" text-anchor="middle" class="t">Client</text><text x="95" y="281" text-anchor="middle" class="s">Web / App</text>
+  <rect x="205" y="225" rx="16" ry="16" width="150" height="80" class="b"/><text x="280" y="255" text-anchor="middle" class="t">API Gateway</text><text x="280" y="279" text-anchor="middle" class="s">Auth / Rate Limit</text>
+  <rect x="405" y="180" rx="16" ry="16" width="190" height="165" class="b"/><text x="500" y="215" text-anchor="middle" class="t">Agent Service</text><text x="500" y="243" text-anchor="middle" class="s">Routing / State</text><text x="500" y="266" text-anchor="middle" class="s">Workflow / Tools</text><text x="500" y="289" text-anchor="middle" class="s">Guardrails</text>
+  <rect x="660" y="55" rx="16" ry="16" width="150" height="80" class="b"/><text x="735" y="88" text-anchor="middle" class="t">RAG</text><text x="735" y="111" text-anchor="middle" class="s">Search / Vector DB</text>
+  <rect x="660" y="175" rx="16" ry="16" width="150" height="80" class="b"/><text x="735" y="208" text-anchor="middle" class="t">Tools</text><text x="735" y="231" text-anchor="middle" class="s">DB / API / MCP</text>
+  <rect x="660" y="295" rx="16" ry="16" width="150" height="80" class="b"/><text x="735" y="328" text-anchor="middle" class="t">Model Gateway</text><text x="735" y="351" text-anchor="middle" class="s">LLM Routing</text>
+  <rect x="660" y="415" rx="16" ry="16" width="150" height="80" class="b"/><text x="735" y="448" text-anchor="middle" class="t">State / Cache</text><text x="735" y="471" text-anchor="middle" class="s">Redis / DB</text>
+  <rect x="865" y="175" rx="16" ry="16" width="145" height="80" class="b"/><text x="938" y="208" text-anchor="middle" class="t">Enterprise</text><text x="938" y="231" text-anchor="middle" class="s">Systems</text>
+  <line x1="160" y1="265" x2="205" y2="265" class="l"/><line x1="355" y1="265" x2="405" y2="265" class="l"/>
+  <line x1="595" y1="220" x2="660" y2="95" class="l"/><line x1="595" y1="245" x2="660" y2="215" class="l"/>
+  <line x1="595" y1="280" x2="660" y2="335" class="l"/><line x1="595" y1="310" x2="660" y2="455" class="l"/>
+  <line x1="810" y1="215" x2="865" y2="215" class="l"/>
+</svg>
+</div>
+
+<h3>5.2 面試第一步：先問 Requirements</h3>
+<div class="table-scroll"><table>
+<tr><th>Functional</th><th>Non-functional</th></tr>
+<tr><td>要回答什麼？要用哪些工具？需不需要 citation？</td><td>QPS、p95 latency、availability、security、cost、data residency</td></tr>
+</table></div>
+<p>如果一開始就直接畫 vector DB，通常代表 system thinking 不夠。</p>
+
+<h3>5.3 Model Gateway</h3>
+<p>不要讓每個 service 直接綁死某一家模型。Gateway 可以集中處理 model routing、fallback、quota、logging、prompt policy、cost control。</p>
+<div class="table-scroll"><table>
+<tr><th>Routing 依據</th><th>例子</th></tr>
+<tr><td>任務難度</td><td>簡單分類用小模型，複雜 reasoning 用大模型</td></tr>
+<tr><td>Latency</td><td>互動式 UI 優先低延遲模型</td></tr>
+<tr><td>Cost</td><td>批次處理可走便宜模型</td></tr>
+<tr><td>Privacy</td><td>敏感資料走 private / self-hosted model</td></tr>
+</table></div>
+
+<h3>5.4 Stateless vs Stateful</h3>
+<p>API server 盡量 stateless，方便 horizontal scaling；conversation / agent state 放 Redis / DB。長任務可拆到 queue / worker，避免 request 卡住。</p>
+
+<h3>5.5 Cache</h3>
+<div class="table-scroll"><table>
+<tr><th>Cache 類型</th><th>適合</th><th>風險</th></tr>
+<tr><td>Exact cache</td><td>相同 query / deterministic output</td><td>命中率有限</td></tr>
+<tr><td>Semantic cache</td><td>語意相近 query</td><td>錯誤命中、資料新鮮度</td></tr>
+<tr><td>Retrieval cache</td><td>熱門 query 的 search result</td><td>index 更新後 stale</td></tr>
+</table></div>
+
+<h3>5.6 Reliability Pattern</h3>
+<div class="grid">
+<div class="card"><h4>Retry</h4><p>只對 transient failure；搭配 backoff。</p></div>
+<div class="card"><h4>Timeout</h4><p>避免工具或模型卡死拖垮整條 request。</p></div>
+<div class="card"><h4>Circuit Breaker</h4><p>下游持續故障時暫停呼叫，避免雪崩。</p></div>
+<div class="card"><h4>Fallback</h4><p>模型 / tool / retrieval 都可設降級路徑。</p></div>
+</div>
+
+<h3>5.7 Scale：100 users → 100,000 users</h3>
+<p>先不要回答「上 K8s」。先問 bottleneck 在哪：</p>
+<div class="stack diagram">
+<div class="layer"><strong>API 層：</strong>horizontal scaling、load balancing、stateless</div>
+<div class="layer"><strong>LLM：</strong>provider rate limit、concurrency、batch、routing、queue</div>
+<div class="layer"><strong>RAG：</strong>index partition、cache、filter、search latency</div>
+<div class="layer"><strong>Tools：</strong>DB connection pool、downstream QPS、async</div>
+<div class="layer"><strong>Observability：</strong>trace every request across agent / tool / model</div>
+</div>
+
+<h3>5.8 Security：AI 系統多一層攻擊面</h3>
+<div class="table-scroll"><table>
+<tr><th>風險</th><th>防法</th></tr>
+<tr><td>Prompt injection</td><td>tool permission boundary、content isolation、allowlist</td></tr>
+<tr><td>Data leakage</td><td>ACL-aware retrieval、redaction、least privilege</td></tr>
+<tr><td>Dangerous tool call</td><td>approval、sandbox、policy engine</td></tr>
+<tr><td>Secrets exposure</td><td>secret manager，不放 prompt / log</td></tr>
+<tr><td>Auditability</td><td>trace、tool log、user identity、decision record</td></tr>
+</table></div>
+
+<h3>5.9 Latency Budget</h3>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>Total latency =
+  gateway
++ retrieval
++ reranking
++ model inference
++ tool calls
++ validation</pre></div>
+<p>如果 SLA 是 3 秒，就不能每層都「最好」。Senior 的工作是分配 budget：哪一層值得多花 300ms 換準確率？哪一層可 cache？哪個 tool 可 parallel？</p>
+
+
+<h3>7.10 Code：I/O 能平行就不要全部串行</h3>
+<p>Agent 常同時打 DB、retriever、外部 API。若彼此沒有 dependency，可平行降低 wall-clock latency。</p>
+<div class="code-title">asyncio：平行查兩個獨立來源</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>import asyncio
+
+async def gather_context(query):
+    rag_task = search_rag(query)
+    profile_task = load_user_profile()
+
+    rag_docs, profile = await asyncio.gather(
+        rag_task,
+        profile_task,
+    )
+    return rag_docs, profile</pre></div>
+
+<h3>7.11 Code：Timeout / Retry 要有邊界</h3>
+<div class="code-title">簡化版 timeout + exponential backoff</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>import asyncio
+
+async def call_with_retry(fn, attempts=3):
+    for i in range(attempts):
+        try:
+            return await asyncio.wait_for(fn(), timeout=2.0)
+        except (TimeoutError, ConnectionError):
+            if i == attempts - 1:
+                raise
+            await asyncio.sleep(0.2 * (2 ** i))</pre></div>
+<p><strong>注意：</strong>不是所有錯誤都 retry。400 類 input error、權限錯誤通常重試沒意義；有副作用的 tool 還要考慮 idempotency。</p>
+
+<h3>7.12 Code：Model Routing</h3>
+<div class="code-title">依 task / risk / latency 選模型（概念示例）</div>
+<div class="code-wrap"><button class="copy-code" type="button">複製</button><pre>def choose_model(task):
+    if task.requires_private_data:
+        return PRIVATE_MODEL
+
+    if task.type in {"classification", "routing"}:
+        return FAST_SMALL_MODEL
+
+    if task.is_high_complexity:
+        return STRONG_MODEL
+
+    return DEFAULT_MODEL</pre></div>
+<p>Senior 面試要補一句：router 本身也要 eval，否則省到模型成本，卻可能因錯誤 routing 降低 task success。</p>
+
+<div class="interview">
+<div class="q">Q：設計一個 10,000 人企業內部 AI Assistant。</div>
+<p><strong>回答順序：</strong>需求與 SLA → identity / RBAC → API Gateway → Agent / workflow → ACL-aware RAG → tools → model gateway → state/cache → observability/eval → reliability → security → scale / cost trade-off。</p>
+<div class="follow">追問：如果 p95 latency 超標，你先查哪裡？</div>
+<p>看 distributed trace 拆解各 stage latency，不先猜。確認是 retrieval、model、tool、queue 還是 retry 放大，再針對 bottleneck 做 cache、parallelism、model routing 或 timeout。</p>
+</div>
+
+<div class="section-pager"><a href="#eval">← AI Evaluation</a><a href="#mock">模擬面試 →</a></div>
+</section>
+
+<section class="phase-title searchable" id="mock">
+<div class="kicker">MOCK INTERVIEW</div>
+<h2>8. 模擬面試題庫</h2>
+
+<details><summary>RAG｜為什麼 Hybrid Search 常比純 Vector Search 穩？</summary><div>
+<p>因為企業資料同時有語意查詢與 exact-match 需求。Dense 擅長語意，BM25 擅長錯誤碼、型號、專有名詞；Hybrid 能互補。回答時再補融合方法（如 RRF）與 eval 方式。</p>
+</div></details>
+
+<details><summary>RAG｜Top-K 要設多少？</summary><div>
+<p>不是固定答案。K 越大 recall 可能上升，但 context precision、cost、latency 可能惡化。應以 retrieval metric + downstream answer quality 找 operating point；常搭配「大 K retrieve，小 K rerank」。</p>
+</div></details>
+
+<details><summary>Agent｜你會怎麼防止 tool 被重複執行？</summary><div>
+<p>對有副作用的操作使用 idempotency key、transaction / unique operation ID；agent state 記錄已執行 action；必要時由 deterministic workflow 控制 transition，而不是只靠 prompt。</p>
+</div></details>
+
+<details><summary>Agent｜Supervisor multi-agent 有什麼缺點？</summary><div>
+<p>多一層 routing latency、token cost、共享狀態一致性、錯誤歸因困難、evaluation 複雜。若 worker 邊界不清楚，很可能只是「角色扮演式拆分」。</p>
+</div></details>
+
+<details><summary>LLM｜KV Cache 解決什麼？</summary><div>
+<p>自回歸解碼時避免每一步重算所有舊 token 的 K/V，使 generation 更快；代價是佔 GPU memory，context 與 batch 越大越明顯。</p>
+</div></details>
+
+<details><summary>LLM｜RAG 和 Fine-tuning 的差別？</summary><div>
+<p>RAG 解「知識外部化、可更新、可引用」；fine-tuning 更適合改模型行為、風格、task pattern。若知識常變，不應把它硬塞進模型權重。</p>
+</div></details>
+
+<details><summary>Evaluation｜LLM-as-a-Judge 可以相信嗎？</summary><div>
+<p>不能盲信。它適合大規模語意評估，但要用明確 rubric、固定 judge、human calibration、pairwise / consistency checks；高風險指標不能只靠 judge。</p>
+</div></details>
+
+<details><summary>Evaluation｜為什麼只看 user thumbs-up 不夠？</summary><div>
+<p>稀疏、有 selection bias，而且無法定位問題在 retrieval、agent 還是 generation。它適合當 online signal，不適合取代 offline diagnostic metrics。</p>
+</div></details>
+
+<details><summary>System Design｜要不要用 Kubernetes？</summary><div>
+<p>先看 deployment scale、availability、team ops 能力與 service complexity。K8s 是手段，不是答案。小規模服務可能 managed container platform 更簡單。</p>
+</div></details>
+
+<details><summary>System Design｜如何控制 LLM 成本？</summary><div>
+<p>model routing、小模型處理簡單任務、減少 context、cache、batch、限制 agent steps、結構化 tool result、offline async tasks；同時用 quality metric 確認不是只省錢卻掉品質。</p>
+</div></details>
+
+<h3>回答 Senior 題目的萬用框架</h3>
+<div class="card">
+<p><strong>1. 先定義問題與目標</strong> → <strong>2. 拆系統層</strong> → <strong>3. 提 baseline</strong> → <strong>4. 說 trade-off</strong> → <strong>5. 說怎麼 eval / observe</strong> → <strong>6. 說 failure handling</strong>。</p>
+<p class="muted">面試時比「背最多名詞」更有用。</p>
+</div>
+
+<div class="section-pager"><a href="#system">← AI System Design</a><a href="#check">面試前 Checklist →</a></div>
+</section>
+
+<section class="phase-title searchable" id="check">
+<div class="kicker">SELF CHECK</div>
+<h2>9. 面試前 Checklist</h2>
+<div class="grid">
+
+<div class="card checklist"><h4>Backend / Data</h4><label><input type="checkbox">我能分清 SQL、PostgreSQL、REST API、ORM、Supabase</label><label><input type="checkbox">我能自己寫 JOIN / GROUP BY / transaction</label><label><input type="checkbox">我能解釋 index、connection pool、MVCC</label><label><input type="checkbox">我能比較 PostgreSQL / Redis / MongoDB / Search / Warehouse</label><label><input type="checkbox">我知道 Supabase = Postgres + API/Auth/Realtime 等服務</label></div>
+<div class="card checklist"><h4>LangGraph / State</h4><label><input type="checkbox">我能分清 State / Runtime Context / Checkpointer / Store</label><label><input type="checkbox">我會 StateGraph、node、edge、conditional edge</label><label><input type="checkbox">我理解 reducer 與 MessagesState</label><label><input type="checkbox">我知道 thread_id + checkpointer 做 short-term memory</label><label><input type="checkbox">我知道 long-term memory 為什麼應放 Store / durable DB</label></div>
+
+<div class="card checklist">
+<h4>RAG</h4>
+<label><input type="checkbox">我能解釋 Dense / BM25 / Hybrid / RRF</label>
+<label><input type="checkbox">我能用 Recall@K / MRR / NDCG 定位問題</label>
+<label><input type="checkbox">我能說明 chunking / reranking trade-off</label>
+<label><input type="checkbox">我能 debug「找得到但答錯」</label>
+<label><input type="checkbox">我知道 GraphRAG / Agentic RAG 何時值得</label>
+</div>
+
+<div class="card checklist">
+<h4>Agent</h4>
+<label><input type="checkbox">我能分清 Workflow / Agent</label>
+<label><input type="checkbox">我知道 router / planner / supervisor pattern</label>
+<label><input type="checkbox">我能說 tool failure / retry / idempotency</label>
+<label><input type="checkbox">我能解釋 state / memory</label>
+<label><input type="checkbox">我能說明何時不用 multi-agent</label>
+</div>
+
+<div class="card checklist">
+<h4>LLM</h4>
+<label><input type="checkbox">我能淺白解釋 Q / K / V</label>
+<label><input type="checkbox">我知道 context window 不等於有效 context</label>
+<label><input type="checkbox">我能解釋 KV cache</label>
+<label><input type="checkbox">我知道 SFT / RLHF / DPO 差別</label>
+<label><input type="checkbox">我能選 Prompt / RAG / Fine-tuning</label>
+</div>
+
+<div class="card checklist">
+<h4>Evaluation + System Design</h4>
+<label><input type="checkbox">我能設計 golden dataset</label>
+<label><input type="checkbox">我能評估 agent trajectory，不只 final answer</label>
+<label><input type="checkbox">我知道 LLM judge 的限制</label>
+<label><input type="checkbox">我會先問 requirements 再畫架構</label>
+<label><input type="checkbox">我能談 latency / cost / security / scale trade-off</label>
+</div>
+</div>
+
+<h3>30 秒總複習</h3>
+<div class="callout ok">
+<p><strong>Backend/Data：</strong>REST 是入口；Postgres 存 durable relational data；Redis 做快取/短期資料；DB 選型先看 access pattern。</p><p><strong>Vector DB：</strong>embedding + ANN index；選 pgvector 或 dedicated DB 要看 scale 與維運。</p><p><strong>RAG：</strong>先找對，再排對，再給對 context，最後才是模型。</p>
+<p><strong>Agent：</strong>不要把 deterministic 的事交給 LLM；自由度越高，guardrail 越重要。State 是 workflow data；context 是 runtime dependency；checkpoint 是 thread persistence；store 是 cross-thread memory。</p>
+<p><strong>LLM：</strong>知道 attention、context、KV cache、sampling 與 tuning 的本質即可。</p>
+<p><strong>Evaluation：</strong>沒有 eval，就無法證明「變好」。</p>
+<p><strong>System Design：</strong>從 requirements 出發，用 observability 找 bottleneck，用 trade-off 做選擇。</p>
+</div>
+
+<div class="section-pager"><a href="#mock">← 模擬面試</a><a class="disabled">下一章 →</a></div>
+</section>
+
+<footer>
+這份筆記的目標是面試實戰：每個主題都至少要能做到「解釋概念 → 舉例 → 說 trade-off → 說如何評估 → 說 failure case」。
+</footer>
+</main>
+</div>
+
+
+
+<script>
+(() => {
+  const body = document.body;
+  const menuBtn = document.getElementById('menuBtn');
+  const drawerBackdrop = document.getElementById('drawerBackdrop');
+  const mobileThemeBtn = document.getElementById('mobileThemeBtn');
+  const desktopThemeBtn = document.getElementById('desktopThemeBtn');
+  const resetProgressBtn = document.getElementById('resetProgressBtn');
+  const backToTop = document.getElementById('backToTop');
+  const readingProgress = document.getElementById('readingProgress');
+  const mobileTitle = document.getElementById('mobileTitle');
+  const input = document.getElementById('search');
+  const blocks = [...document.querySelectorAll('.searchable')];
+
+  // Drawer
+  const closeDrawer = () => body.classList.remove('drawer-open');
+  menuBtn?.addEventListener('click', () => body.classList.toggle('drawer-open'));
+  drawerBackdrop?.addEventListener('click', closeDrawer);
+  document.querySelectorAll('aside nav a').forEach(a => a.addEventListener('click', closeDrawer));
+
+  // Search
+  input?.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) {
+      blocks.forEach(x => x.classList.remove('hidden'));
+      return;
+    }
+    blocks.forEach(x => x.classList.toggle('hidden', !x.innerText.toLowerCase().includes(q)));
+  });
+
+  // Theme persistence
+  const applyTheme = (theme) => {
+    const isLight = theme === 'light';
+    body.classList.toggle('light', isLight);
+    localStorage.setItem('aiNotesTheme', theme);
+    if (mobileThemeBtn) mobileThemeBtn.textContent = isLight ? '☀' : '☾';
+  };
+  const savedTheme = localStorage.getItem('aiNotesTheme');
+  applyTheme(savedTheme || 'dark');
+  const toggleTheme = () => applyTheme(body.classList.contains('light') ? 'dark' : 'light');
+  mobileThemeBtn?.addEventListener('click', toggleTheme);
+  desktopThemeBtn?.addEventListener('click', toggleTheme);
+
+  // Copy buttons
+  document.querySelectorAll('.copy-code').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const pre = btn.parentElement.querySelector('pre');
+      const text = pre?.innerText || '';
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = '已複製';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '複製';
+          btn.classList.remove('copied');
+        }, 1200);
+      } catch {
+        btn.textContent = '請手動複製';
+        setTimeout(() => btn.textContent = '複製', 1200);
+      }
+    });
+  });
+
+  // Persist checklist state
+  const boxes = [...document.querySelectorAll('.checklist input[type="checkbox"]')];
+  boxes.forEach((box, i) => {
+    const key = `aiNotesCheck:${i}`;
+    box.checked = localStorage.getItem(key) === '1';
+    box.addEventListener('change', () => localStorage.setItem(key, box.checked ? '1' : '0'));
+  });
+  resetProgressBtn?.addEventListener('click', () => {
+    if (!confirm('要清除所有 Checklist 勾選嗎？')) return;
+    boxes.forEach((box, i) => {
+      box.checked = false;
+      localStorage.removeItem(`aiNotesCheck:${i}`);
+    });
+  });
+
+  // Reading progress + current mobile title + back to top
+  const headings = [...document.querySelectorAll('main section[id]')];
+  const onScroll = () => {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    readingProgress.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    backToTop?.classList.toggle('show', window.scrollY > 700);
+
+    let current = headings[0];
+    for (const section of headings) {
+      if (section.getBoundingClientRect().top <= 90) current = section;
+    }
+    const title = current?.querySelector('h1,h2')?.textContent?.trim();
+    if (title && mobileTitle) mobileTitle.textContent = title;
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  backToTop?.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+  // Keyboard shortcut on desktop: "/" focuses search
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+      e.preventDefault();
+      input?.focus();
+    }
+    if (e.key === 'Escape') closeDrawer();
+  });
+})();
+</script>
+
+<a class="hub-home-link" href="./index.html" aria-label="回到學習首頁">⌂ 學習首頁</a>
+</body>
+</html>

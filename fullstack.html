@@ -1,0 +1,2782 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><style>
+/* ===== Mobile Study Mode additions ===== */
+.mobile-study-topbar{
+  display:none; position:sticky; top:0; z-index:1200;
+  min-height:56px; padding:8px 12px; align-items:center; gap:10px;
+  background:color-mix(in srgb, var(--surface) 94%, transparent);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+.mobile-study-title{
+  flex:1; min-width:0; text-align:center; font-family:var(--f-display);
+  font-size:14px; color:var(--ink); white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+}
+.ms-btn{
+  min-width:38px; height:38px; border:1px solid var(--line);
+  background:var(--surface); color:var(--ink); border-radius:8px;
+  padding:0 10px; font-family:var(--f-body); cursor:pointer;
+}
+.ms-btn:active{transform:translateY(1px)}
+.ms-progress{
+  position:fixed; left:0; top:0; z-index:1500; height:3px; width:0%;
+  background:linear-gradient(90deg,var(--route),var(--go));
+}
+.ms-backdrop{
+  display:none; position:fixed; inset:0; z-index:1090;
+  background:rgba(0,0,0,.45); backdrop-filter:blur(2px);
+}
+.ms-drawer{
+  display:none; position:fixed; z-index:1100; left:0; top:0;
+  width:min(86vw,340px); height:100dvh; overflow-y:auto;
+  background:var(--surface); color:var(--ink); border-right:1px solid var(--line);
+  padding:18px 16px 28px; transform:translateX(-105%);
+  transition:transform .22s ease;
+}
+.ms-drawer-head{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:10px; margin-bottom:12px;
+}
+.ms-drawer-head strong{font-family:var(--f-display);font-size:18px}
+.ms-search{
+  width:100%; margin:4px 0 14px; padding:10px 12px; border:1px solid var(--line);
+  border-radius:7px; background:var(--surface-2); color:var(--ink); font:inherit;
+}
+.ms-nav{display:grid;gap:4px}
+.ms-nav a{
+  display:flex; gap:9px; align-items:flex-start; text-decoration:none;
+  color:var(--ink-2); padding:8px 9px; border-radius:7px; font-size:14px;
+}
+.ms-nav a:hover,.ms-nav a.active{background:var(--surface-2);color:var(--route)}
+.ms-nav .num{
+  color:var(--route); min-width:27px; font-size:11px; padding-top:2px;
+}
+.ms-drawer-actions{display:flex;gap:8px;margin:14px 0}
+.ms-drawer-actions .ms-btn{flex:1;font-size:12px}
+.ms-section-tools{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-top:2.2rem; padding-top:1rem; border-top:1px solid var(--line-soft);
+}
+.ms-complete{
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+  padding:8px 11px; border-radius:7px; cursor:pointer; font:inherit; font-size:13px;
+}
+.ms-complete.done{border-color:var(--go);color:var(--go);background:var(--go-soft)}
+.ms-pager{display:flex;gap:8px;flex:1;justify-content:flex-end}
+.ms-pager a{
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+  text-decoration:none; padding:8px 10px; border-radius:7px; font-size:12px;
+}
+.ms-pager a:hover{color:var(--route);border-color:var(--route)}
+.ms-pager .disabled{opacity:.35;pointer-events:none}
+.ms-study-note{
+  margin-top:1.25rem; padding:.85rem 1rem; border:1px solid var(--line);
+  background:var(--surface-2); color:var(--ink-2); font-size:13px; line-height:1.65;
+}
+#msBackTop{
+  position:fixed; right:16px; bottom:18px; z-index:1000;
+  opacity:0; pointer-events:none; transition:.2s;
+  width:42px; padding:0; border-radius:50%;
+}
+#msBackTop.show{opacity:1;pointer-events:auto}
+
+/* Long inline code / URLs are easier to inspect on a phone */
+pre, .code-block {max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch}
+code{overflow-wrap:anywhere}
+.table-scroll{ -webkit-overflow-scrolling:touch; }
+
+/* Hide a chapter when using mobile search */
+.ms-search-hidden{display:none !important}
+
+@media (max-width:720px){
+  .mobile-study-topbar{display:flex}
+  .ms-drawer{display:block}
+  body.ms-drawer-open{overflow:hidden}
+  body.ms-drawer-open .ms-drawer{transform:translateX(0)}
+  body.ms-drawer-open .ms-backdrop{display:block}
+
+  /* Existing horizontal jump bar is useful on desktop but redundant on mobile. */
+  .jump{display:none}
+
+  .masthead-inner{padding-top:2rem}
+  .wrap{width:min(100% - 1.3rem,1140px)}
+  section{scroll-margin-top:68px;padding:2.4rem 0}
+  .ch-head{gap:.7rem}
+  .ch-num{font-size:11px}
+  .why{padding-left:0}
+  .block-body{padding:1rem}
+  .case-body{padding:1rem}
+  .table-scroll{
+    width:calc(100vw - 1.3rem);
+    max-width:100%;
+    overflow-x:auto;
+  }
+  table{min-width:600px}
+  .coverage{grid-template-columns:1fr 1fr}
+  .legend{gap:.8rem}
+  .ms-section-tools{align-items:flex-start;flex-direction:column}
+  .ms-pager{width:100%;justify-content:space-between}
+  .ms-pager a{flex:1;text-align:center}
+}
+@media (max-width:430px){
+  body{font-size:15.5px;line-height:1.78}
+  h1{font-size:2rem}
+  .coverage{grid-template-columns:1fr}
+  .masthead-inner{padding-bottom:1.8rem}
+  .block-head{padding:.65rem .9rem}
+  .block-body p,.block-body li{font-size:14.5px}
+}
+</style>
+<style>
+.hub-home-link{
+  position:fixed;left:16px;bottom:18px;z-index:1600;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 12px;border-radius:999px;
+  border:1px solid rgba(127,127,127,.35);
+  background:rgba(20,26,40,.88);color:#fff;
+  text-decoration:none;font:600 12px -apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 6px 20px rgba(0,0,0,.18)
+}
+@media (prefers-color-scheme: light){
+  .hub-home-link{background:rgba(255,255,255,.92);color:#16202b}
+}
+</style>
+
+</head><body><div class="ms-progress" id="msProgress"></div><div class="mobile-study-topbar">
+<button aria-label="開啟章節目錄" class="ms-btn" id="msMenuBtn">☰</button>
+<div class="mobile-study-title" id="msMobileTitle">全端工程師知識地圖</div>
+<button aria-label="切換深淺色" class="ms-btn" id="msThemeBtn">◐</button>
+</div><div class="ms-backdrop" id="msBackdrop"></div><button aria-label="回到頂端" class="ms-btn" id="msBackTop">↑</button><aside class="ms-drawer" id="msDrawer">
+<div class="ms-drawer-head">
+<strong>全端知識地圖</strong>
+<button aria-label="關閉目錄" class="ms-btn" id="msCloseBtn">×</button>
+</div>
+<input class="ms-search" id="msSearch" placeholder="搜尋章節或關鍵字…" type="search"/>
+<div class="ms-drawer-actions">
+<button class="ms-btn" id="msDrawerThemeBtn">◐ 深淺色</button>
+<button class="ms-btn" id="msResetBtn">↺ 重設進度</button>
+</div>
+<nav class="ms-nav" id="msNav"><a href="#ch01"><span class="num">01</span><span>網路與 HTTP</span></a><a href="#ch02"><span class="num">02</span><span>前端基礎：HTML、CSS、TypeScript</span></a><a href="#ch03"><span class="num">03</span><span>React 與元件模型</span></a><a href="#ch04"><span class="num">04</span><span>渲染策略：畫面到底在哪裡被產生</span></a><a href="#ch05"><span class="num">05</span><span>後端與 API</span></a><a href="#ch06"><span class="num">06</span><span>資料庫</span></a><a href="#ch07"><span class="num">07</span><span>身分驗證與安全</span></a><a href="#ch08"><span class="num">08</span><span>部署與維運（DevOps）</span></a><a href="#ch09"><span class="num">09</span><span>效能：先量，再改</span></a><a href="#ch10"><span class="num">10</span><span>測試</span></a><a href="#ch11"><span class="num">11</span><span>架構決策與技術債</span></a><a href="#ch12"><span class="num">12</span><span>PWA：讓網站變成手機上的 App</span></a><a href="#ch13"><span class="num">13</span><span>面試怎麼講</span></a></nav>
+</aside>
+<title>全端工程師知識地圖 — 用一個真實專案走完 13 個領域</title>
+<style>
+  :root {
+    --paper:      #E9EDF1;
+    --surface:    #FFFFFF;
+    --surface-2:  #F2F6F9;
+    --ink:        #16202B;
+    --ink-2:      #4B5C6D;
+    --line:       #C7D3DE;
+    --line-soft:  #DDE5EC;
+    --route:      #0E5A6B;
+    --route-soft: #D5E8ED;
+    --signal:     #AE3D0A;
+    --signal-soft:#FAE2D2;
+    --go:         #146B37;
+    --go-soft:    #D5EDDD;
+
+    --f-display: Futura, "Avenir Next", "Trebuchet MS", "PingFang TC", "Heiti TC", sans-serif;
+    --f-body: "PingFang TC", "Heiti TC", "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    --f-mono: Menlo, "SF Mono", "Cascadia Mono", Consolas, monospace;
+
+    --w: min(1140px, 100% - 2.5rem);
+    --prose: min(74ch, 100%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E151C; --surface: #16202A; --surface-2: #1C2833;
+      --ink: #E2EAF2; --ink-2: #93A6B8; --line: #2B3A48; --line-soft: #223040;
+      --route: #4FD1C5; --route-soft: #103740;
+      --signal: #FB923C; --signal-soft: #3B2412;
+      --go: #4ADE80; --go-soft: #113220;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0E151C; --surface: #16202A; --surface-2: #1C2833;
+    --ink: #E2EAF2; --ink-2: #93A6B8; --line: #2B3A48; --line-soft: #223040;
+    --route: #4FD1C5; --route-soft: #103740;
+    --signal: #FB923C; --signal-soft: #3B2412;
+    --go: #4ADE80; --go-soft: #113220;
+  }
+  :root[data-theme="light"] {
+    --paper: #E9EDF1; --surface: #FFFFFF; --surface-2: #F2F6F9;
+    --ink: #16202B; --ink-2: #4B5C6D; --line: #C7D3DE; --line-soft: #DDE5EC;
+    --route: #0E5A6B; --route-soft: #D5E8ED;
+    --signal: #AE3D0A; --signal-soft: #FAE2D2;
+    --go: #146B37; --go-soft: #D5EDDD;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--f-body); font-size: 16.5px; line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: var(--w); margin-inline: auto; }
+  .prose { width: var(--prose); }
+  p, li { color: var(--ink-2); }
+  p { margin: 0 0 1.05em; }
+  strong { color: var(--ink); font-weight: 600; }
+  code {
+    font-family: var(--f-mono); font-size: 0.86em;
+    background: var(--surface-2); border: 1px solid var(--line-soft);
+    border-radius: 3px; padding: 0.1em 0.38em; color: var(--ink); word-break: break-word;
+  }
+  .num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); }
+
+  /* ---------- masthead ---------- */
+  .masthead { border-bottom: 1px solid var(--line); background: var(--surface); }
+  .masthead-inner { width: var(--w); margin-inline: auto; padding: clamp(2.8rem, 7vw, 5rem) 0 clamp(2.2rem, 4vw, 3rem); }
+  .eyebrow {
+    font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--route); margin: 0 0 1.4rem;
+  }
+  h1 {
+    font-family: var(--f-display); font-weight: 500;
+    font-size: clamp(2rem, 5.8vw, 3.6rem); line-height: 1.14;
+    letter-spacing: -0.015em; text-wrap: balance; margin: 0 0 1.3rem;
+    max-width: 22ch; color: var(--ink);
+  }
+  .standfirst {
+    font-size: clamp(1rem, 2.1vw, 1.16rem); line-height: 1.75;
+    max-width: 60ch; margin: 0; color: var(--ink-2);
+  }
+
+  /* ---------- coverage matrix ---------- */
+  .coverage {
+    margin-top: clamp(2rem, 4vw, 2.8rem);
+    display: grid; gap: 1px;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    background: var(--line); border: 1px solid var(--line);
+  }
+  .cov {
+    background: var(--surface); padding: 0.85rem 0.95rem;
+    display: grid; gap: 0.3rem; min-width: 0;
+    text-decoration: none; color: inherit;
+    border-left: 3px solid transparent;
+    transition: background-color 0.12s;
+  }
+  .cov:hover { background: var(--surface-2); }
+  .cov:focus-visible { outline: 2px solid var(--route); outline-offset: -2px; }
+  .cov .cn { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--ink-2); }
+  .cov .ct { font-family: var(--f-display); font-size: 0.98rem; line-height: 1.3; color: var(--ink); }
+  .cov .cs { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .cov.deep { border-left-color: var(--go); }
+  .cov.deep .cs { color: var(--go); }
+  .cov.some { border-left-color: var(--route); }
+  .cov.some .cs { color: var(--route); }
+  .cov.thin { border-left-color: var(--signal); }
+  .cov.thin .cs { color: var(--signal); }
+
+  .legend { display: flex; gap: 1.3rem; flex-wrap: wrap; margin-top: 0.85rem; }
+  .legend span { font-size: 12.5px; color: var(--ink-2); display: inline-flex; align-items: center; gap: 0.45rem; }
+  .legend i { width: 3px; height: 14px; flex: none; }
+  .legend i.d { background: var(--go); }
+  .legend i.s { background: var(--route); }
+  .legend i.t { background: var(--signal); }
+
+  /* ---------- sticky nav ---------- */
+  .jump {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .jump-inner { width: var(--w); margin-inline: auto; display: flex; gap: 0; white-space: nowrap; }
+  .jump a {
+    font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.06em;
+    color: var(--ink-2); text-decoration: none; padding: 0.75rem 0.75rem;
+    border-bottom: 2px solid transparent; flex: none;
+  }
+  .jump a:first-child { padding-left: 0; }
+  .jump a:hover { color: var(--route); border-bottom-color: var(--route); }
+  .jump a:focus-visible { outline: 2px solid var(--route); outline-offset: -2px; }
+
+  /* ---------- chapters ---------- */
+  section { padding: clamp(2.8rem, 6vw, 4.5rem) 0; border-bottom: 1px solid var(--line); scroll-margin-top: 3.2rem; }
+  section:last-of-type { border-bottom: 0; }
+  .ch-head { display: flex; gap: 1.1rem; align-items: baseline; margin-bottom: 0.9rem; }
+  .ch-num {
+    font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.1em;
+    color: var(--surface); background: var(--route); padding: 0.28rem 0.6rem;
+    flex: none; align-self: flex-start; margin-top: 0.4rem;
+  }
+  :root[data-theme="dark"] .ch-num, .ch-num { color: var(--paper); }
+  h2 {
+    font-family: var(--f-display); font-weight: 500;
+    font-size: clamp(1.45rem, 3.7vw, 2rem); line-height: 1.25;
+    letter-spacing: -0.008em; margin: 0; text-wrap: balance; color: var(--ink);
+  }
+  .why {
+    font-size: 15.5px; color: var(--ink-2); max-width: 62ch;
+    margin: 0 0 1.9rem; padding-left: calc(1.1rem + 2.1rem);
+    line-height: 1.75;
+  }
+  @media (max-width: 620px) { .why { padding-left: 0; } }
+
+  h3 {
+    font-family: var(--f-display); font-weight: 500;
+    font-size: clamp(1.05rem, 2.3vw, 1.2rem); margin: 2.1rem 0 0.8rem; color: var(--ink);
+  }
+
+  /* ---------- block types ---------- */
+  .block { border: 1px solid var(--line); background: var(--surface); margin-bottom: 1.3rem; }
+  .block-head {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--line-soft);
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase;
+  }
+  .block-body { padding: 1.2rem 1.35rem 1.35rem; }
+  .block-body > :last-child { margin-bottom: 0; }
+  .block.core { border-left: 3px solid var(--route); }
+  .block.core .block-head { color: var(--route); background: var(--route-soft); }
+  .block.done { border-left: 3px solid var(--go); }
+  .block.done .block-head { color: var(--go); background: var(--go-soft); }
+  .block.gap { border-left: 3px solid var(--signal); }
+  .block.gap .block-head { color: var(--signal); background: var(--signal-soft); }
+
+  .block-body p { font-size: 15px; }
+  .block-body ul { padding-left: 1.15rem; margin: 0 0 1em; }
+  .block-body li { font-size: 15px; margin-bottom: 0.6em; line-height: 1.75; }
+  .block-body li:last-child { margin-bottom: 0; }
+  .block-body li b { color: var(--ink); font-weight: 600; }
+
+  .say {
+    margin-top: 1rem; padding: 0.75rem 0.95rem;
+    background: var(--surface-2); border: 1px solid var(--line-soft);
+    font-size: 14px; line-height: 1.7; color: var(--ink);
+  }
+  .say b {
+    display: block; font-family: var(--f-mono); font-size: 10px;
+    letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-2);
+    margin-bottom: 0.3rem; font-weight: 500;
+  }
+
+  /* ---------- tables ---------- */
+  .table-scroll { overflow-x: auto; margin: 1.3rem 0; border: 1px solid var(--line); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14px; }
+  th, td { text-align: left; padding: 0.65rem 0.95rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  thead th {
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--ink-2); font-weight: 500;
+    background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td { color: var(--ink-2); }
+  td.k { color: var(--ink); }
+  td.n { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.hot { color: var(--signal); font-weight: 600; }
+  td.cool { color: var(--go); font-weight: 600; }
+
+  /* ---------- case study ---------- */
+  .case { border: 1px solid var(--route); margin: 1.6rem 0; }
+  .case-head {
+    background: var(--route); color: var(--paper);
+    padding: 0.7rem 1.2rem; font-family: var(--f-mono);
+    font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase;
+  }
+  .case-body { padding: 1.4rem 1.4rem 1.5rem; background: var(--surface); }
+  .case-body > :last-child { margin-bottom: 0; }
+  .case-body h4 {
+    font-family: var(--f-display); font-weight: 500; font-size: 1.06rem;
+    margin: 1.7rem 0 0.6rem; color: var(--ink);
+  }
+  .case-body h4:first-child { margin-top: 0; }
+  .case-body p { font-size: 15px; }
+
+  .bars { margin: 1.4rem 0; }
+  .bar-row { margin-bottom: 1.4rem; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-label { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.45rem; flex-wrap: wrap; }
+  .bar-label .who { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
+  .bar-label .who.is-wrong { color: var(--signal); }
+  .bar-label .tot { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-2); }
+  .bar { display: flex; height: 42px; border: 1px solid var(--line); background: var(--surface); overflow: hidden; }
+  .seg {
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--f-mono); font-size: 11px; font-variant-numeric: tabular-nums;
+    white-space: nowrap; overflow: hidden; border-right: 1px solid var(--line);
+  }
+  .seg:last-child { border-right: 0; }
+  .seg.neutral { background: var(--surface-2); color: var(--ink-2); }
+  .seg.slow { background: var(--signal-soft); color: var(--signal); font-weight: 600; }
+  .seg.fast { background: var(--go-soft); color: var(--go); }
+
+  /* ---------- concept aside ---------- */
+  .note {
+    border-left: 3px solid var(--route); background: var(--surface);
+    padding: 1rem 1.2rem; margin: 1.4rem 0; width: var(--prose);
+  }
+  .note h4 {
+    margin: 0 0 0.45rem; font-family: var(--f-mono); font-size: 11px;
+    letter-spacing: 0.13em; text-transform: uppercase; color: var(--route); font-weight: 500;
+  }
+  .note p { margin: 0 0 0.65em; font-size: 15px; }
+  .note p:last-child { margin-bottom: 0; }
+
+  /* ---------- diagram ---------- */
+  .flow { display: grid; grid-template-columns: 1fr; gap: 0; border: 1px solid var(--line); background: var(--surface); margin: 1.4rem 0; }
+  @media (min-width: 820px) { .flow { grid-template-columns: 1fr auto 1fr auto 1fr; } }
+  .flow > * { min-width: 0; }
+  .fnode { padding: 1.2rem 1.25rem; }
+  .fnode + .fnode { border-top: 1px solid var(--line-soft); }
+  @media (min-width: 820px) { .fnode + .fnode { border-top: 0; } }
+  .fnode .ft { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 0.5rem; }
+  .fnode .fn { font-family: var(--f-display); font-size: 1.06rem; color: var(--ink); line-height: 1.35; }
+  .fnode .fw { font-family: var(--f-mono); font-size: 11.5px; color: var(--route); margin-bottom: 0.6rem; }
+  .fnode .fd { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
+  .fhop {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 0.5rem 0.9rem; background: var(--surface-2);
+    border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+    font-family: var(--f-mono); font-size: 11px; color: var(--signal); line-height: 1.5;
+  }
+  @media (min-width: 820px) {
+    .fhop { flex-direction: column; border: 0; border-left: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); min-width: 100px; }
+  }
+  .fhop span { color: var(--ink-2); font-size: 10px; display: block; }
+  .fig-cap { font-size: 13px; line-height: 1.6; color: var(--ink-2); margin: -0.6rem 0 1.4rem; font-style: italic; }
+
+  /* ---------- interview ---------- */
+  .script {
+    background: var(--surface); border: 1px solid var(--line);
+    border-left: 3px solid var(--route); padding: 1.4rem 1.4rem 1.5rem; margin: 1.4rem 0;
+  }
+  .script .step {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--route); margin: 1.35rem 0 0.4rem;
+  }
+  .script .step:first-child { margin-top: 0; }
+  .script p { margin: 0; font-size: 15px; color: var(--ink); line-height: 1.8; }
+
+  .qa details { border: 1px solid var(--line); background: var(--surface); margin-bottom: -1px; }
+  .qa summary {
+    cursor: pointer; padding: 0.85rem 1.15rem; font-family: var(--f-display);
+    font-size: 0.98rem; color: var(--ink); list-style: none;
+    display: flex; gap: 0.65rem; align-items: baseline;
+  }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary::before { content: "Q"; font-family: var(--f-mono); font-size: 11px; color: var(--route); flex: none; }
+  .qa summary:focus-visible { outline: 2px solid var(--route); outline-offset: -2px; }
+  .qa details[open] summary { border-bottom: 1px solid var(--line-soft); }
+  .qa .a { padding: 0.95rem 1.15rem 1.1rem 2.4rem; font-size: 14.5px; color: var(--ink-2); line-height: 1.8; }
+  .qa .a p { margin: 0 0 0.75em; font-size: 14.5px; }
+  .qa .a p:last-child { margin-bottom: 0; }
+
+  ul.plain { padding-left: 1.15rem; margin: 0 0 1.05em; }
+  ul.plain li { margin-bottom: 0.5em; }
+
+  /* ══════════ 圖解元件系統 ══════════ */
+  .dia { border: 1px solid var(--line); background: var(--surface); margin: 1.5rem 0 0.5rem; }
+  .dia-head {
+    padding: 0.6rem 1.1rem; border-bottom: 1px solid var(--line-soft);
+    background: var(--surface-2); font-family: var(--f-mono);
+    font-size: 10.5px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--route);
+  }
+  .dia-body { padding: 1.2rem 1.2rem 1.3rem; }
+  .dia-body > :last-child { margin-bottom: 0; }
+  .dia-cap { font-size: 13px; line-height: 1.65; color: var(--ink-2); margin: 0.65rem 0 1.5rem; font-style: italic; }
+
+  /* 水平流程鏈 */
+  .chain { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; margin-bottom: 0.9rem; }
+  .cbox {
+    border: 1px solid var(--line); background: var(--surface-2);
+    padding: 0.65rem 0.85rem; flex: 1 1 130px; min-width: 0;
+  }
+  .cbox .cl { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 0.25rem; }
+  .cbox .cv { font-size: 13.5px; color: var(--ink); line-height: 1.45; }
+  .cbox .cc { font-family: var(--f-mono); font-size: 11px; margin-top: 0.3rem; }
+  .cbox.hot { border-color: var(--signal); background: var(--signal-soft); }
+  .cbox.hot .cc { color: var(--signal); font-weight: 600; }
+  .cbox.cool { border-color: var(--go); background: var(--go-soft); }
+  .cbox.cool .cc { color: var(--go); font-weight: 600; }
+  .carrow {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 0.45rem; color: var(--ink-2); font-family: var(--f-mono); font-size: 15px; flex: none;
+  }
+
+  /* 垂直分區（信任邊界、序列化邊界） */
+  .zone { border: 1px solid var(--line); padding: 0.95rem 1.05rem; }
+  .zone .zl { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .zone ul { margin: 0; padding-left: 1.1rem; }
+  .zone li { font-size: 13.5px; line-height: 1.7; margin-bottom: 0.2em; }
+  .zone.danger { border-color: var(--signal); background: var(--signal-soft); }
+  .zone.danger .zl { color: var(--signal); }
+  .zone.safe { border-color: var(--go); background: var(--go-soft); }
+  .zone.safe .zl { color: var(--go); }
+  .zone.plain { background: var(--surface-2); }
+  .zone.plain .zl { color: var(--route); }
+  .zone-gap {
+    text-align: center; padding: 0.5rem 0.6rem; font-family: var(--f-mono);
+    font-size: 11px; color: var(--signal); line-height: 1.55;
+  }
+  .zone-gap b { display: block; font-weight: 600; }
+
+  /* 兩欄比較 */
+  .vs { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
+  @media (min-width: 700px) { .vs { grid-template-columns: 1fr 1fr; } }
+  .vs > * { min-width: 0; }
+  .vs-col { border: 1px solid var(--line); }
+  .vs-col > h5 {
+    margin: 0; padding: 0.55rem 0.85rem; border-bottom: 1px solid var(--line-soft);
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; background: var(--surface-2); color: var(--ink-2); font-weight: 500;
+  }
+  .vs-col.bad > h5 { color: var(--signal); background: var(--signal-soft); }
+  .vs-col.good > h5 { color: var(--go); background: var(--go-soft); }
+  .vs-col .vc { padding: 0.85rem; }
+  .vs-col .vc > :last-child { margin-bottom: 0; }
+
+  /* 時間軸（單軌，帶刻度標記） */
+  .track { margin-bottom: 1.1rem; }
+  .track:last-child { margin-bottom: 0; }
+  .track-lab { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 0.4rem; }
+  .track-line { position: relative; height: 34px; border: 1px solid var(--line); background: var(--surface-2); display: flex; }
+  .tseg { display: flex; align-items: center; justify-content: center; font-family: var(--f-mono); font-size: 10.5px; overflow: hidden; white-space: nowrap; border-right: 1px solid var(--line); }
+  .tseg:last-child { border-right: 0; }
+  .tseg.w { background: var(--surface-2); color: var(--ink-2); }
+  .tseg.h { background: var(--signal-soft); color: var(--signal); font-weight: 600; }
+  .tseg.g { background: var(--go-soft); color: var(--go); font-weight: 600; }
+  .tseg.r { background: var(--route-soft); color: var(--route); }
+  .track-marks { display: flex; margin-top: 0.3rem; }
+  .track-marks span { font-family: var(--f-mono); font-size: 10px; color: var(--ink-2); text-align: center; }
+
+  /* 特異性計分 */
+  .spec { display: grid; gap: 0.5rem; }
+  .spec-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 0.6rem; align-items: center;
+    border: 1px solid var(--line); padding: 0.6rem 0.8rem; background: var(--surface-2); min-width: 0;
+  }
+  .spec-row.win { border-color: var(--go); background: var(--go-soft); }
+  .spec-row.lose { opacity: 0.72; }
+  .spec-sel { font-family: var(--f-mono); font-size: 12px; color: var(--ink); word-break: break-all; }
+  .spec-note { font-size: 11.5px; color: var(--ink-2); margin-top: 0.2rem; }
+  .spec-row.win .spec-note { color: var(--go); font-weight: 600; }
+  .spec-score { font-family: var(--f-mono); font-size: 13px; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  /* 測試金字塔 */
+  .pyr { display: grid; gap: 0.35rem; justify-items: center; }
+  .pyr-row {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    border: 1px solid var(--line); padding: 0.6rem 0.7rem; font-size: 13px; line-height: 1.4; min-width: 0;
+  }
+  .pyr-row.top { width: min(46%, 260px); }
+  .pyr-row.mid { width: min(70%, 400px); }
+  .pyr-row.base { width: min(94%, 540px); }
+  .pyr-row.empty { border-style: dashed; color: var(--signal); background: var(--signal-soft); }
+  .pyr-row.has { background: var(--go-soft); color: var(--go); border-color: var(--go); }
+  .pyr-row b { font-weight: 600; }
+
+  /* 二維矩陣 */
+  .mtx { display: grid; grid-template-columns: auto 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); font-size: 13px; }
+  .mtx > * { background: var(--surface); padding: 0.7rem 0.8rem; min-width: 0; }
+  .mtx .mh { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); background: var(--surface-2); }
+  .mtx .mc { color: var(--ink); line-height: 1.5; }
+  .mtx .mc small { display: block; color: var(--ink-2); font-size: 11.5px; margin-top: 0.2rem; }
+  .mtx .mc.on { background: var(--route-soft); }
+
+  /* 樹狀（元件邊界） */
+  .tree { font-family: var(--f-mono); font-size: 12.5px; line-height: 1.9; color: var(--ink-2); overflow-x: auto; white-space: pre; margin: 0; }
+  .tree b { color: var(--ink); font-weight: 600; }
+  .tree .sv { color: var(--go); }
+  .tree .cl { color: var(--signal); }
+
+  footer { padding: 2.5rem 0 4rem; }
+  footer p { font-size: 13px; color: var(--ink-2); margin: 0; max-width: 70ch; }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+<header class="masthead">
+<div class="masthead-inner">
+<p class="eyebrow">全端工程師知識地圖</p>
+<h1>13 個領域，一個真實專案</h1>
+<p class="standfirst">
+      這不是一份「該學什麼」的清單，而是一份<strong>對照表</strong>——
+      左邊是全端工程師被期待要懂的東西，右邊是你在海蛞蝓圖鑑這個專案裡
+      <strong>真的碰過、可以講出細節</strong>的部分，以及<strong>還沒碰到、被問到要怎麼答</strong>的部分。
+      每一章都用同一個專案當例子，所以整份讀完是一個連貫的故事，不是十三個不相干的主題。
+    </p>
+<div class="coverage">
+<a class="cov deep" href="#ch01"><span class="cn">01</span><span class="ct">網路與 HTTP</span><span class="cs">深入碰過</span></a>
+<a class="cov some" href="#ch02"><span class="cn">02</span><span class="ct">前端基礎</span><span class="cs">碰過</span></a>
+<a class="cov some" href="#ch03"><span class="cn">03</span><span class="ct">React 元件模型</span><span class="cs">碰過</span></a>
+<a class="cov deep" href="#ch04"><span class="cn">04</span><span class="ct">渲染策略</span><span class="cs">深入碰過</span></a>
+<a class="cov some" href="#ch05"><span class="cn">05</span><span class="ct">後端與 API</span><span class="cs">碰過</span></a>
+<a class="cov some" href="#ch06"><span class="cn">06</span><span class="ct">資料庫</span><span class="cs">碰過</span></a>
+<a class="cov deep" href="#ch07"><span class="cn">07</span><span class="ct">身分驗證與安全</span><span class="cs">深入碰過</span></a>
+<a class="cov deep" href="#ch08"><span class="cn">08</span><span class="ct">部署與維運</span><span class="cs">深入碰過</span></a>
+<a class="cov deep" href="#ch09"><span class="cn">09</span><span class="ct">效能</span><span class="cs">深入碰過</span></a>
+<a class="cov thin" href="#ch10"><span class="cn">10</span><span class="ct">測試</span><span class="cs">很薄</span></a>
+<a class="cov some" href="#ch11"><span class="cn">11</span><span class="ct">架構與技術債</span><span class="cs">碰過</span></a>
+<a class="cov some" href="#ch12"><span class="cn">12</span><span class="ct">PWA</span><span class="cs">碰過</span></a>
+<a class="cov deep" href="#ch13"><span class="cn">13</span><span class="ct">面試怎麼講</span><span class="cs">整理好了</span></a>
+</div>
+<div class="legend">
+<span><i class="d"></i>深入碰過——有故事、有數字，可以答追問</span>
+<span><i class="s"></i>碰過——講得出實例，但深度有限</span>
+<span><i class="t"></i>很薄——要誠實承認，並說出你知道該怎麼做</span>
+</div>
+<div class="ms-study-note"><strong>手機閱讀：</strong>左上 ☰ 開目錄；可搜尋章節、切換深淺色、標記章節完成；閱讀進度與完成狀態會保存在這台裝置的瀏覽器。</div></div>
+</header>
+<nav aria-label="章節導覽" class="jump">
+<div class="jump-inner">
+<a href="#ch01">01 網路</a>
+<a href="#ch02">02 前端基礎</a>
+<a href="#ch03">03 React</a>
+<a href="#ch04">04 渲染</a>
+<a href="#ch05">05 後端</a>
+<a href="#ch06">06 資料庫</a>
+<a href="#ch07">07 安全</a>
+<a href="#ch08">08 部署</a>
+<a href="#ch09">09 效能</a>
+<a href="#ch10">10 測試</a>
+<a href="#ch11">11 架構</a>
+<a href="#ch12">12 PWA</a><a href="#ch13">13 面試</a>
+</div>
+</nav>
+<div class="wrap">
+<!-- ══════════ 01 ══════════ -->
+<section id="ch01">
+<div class="ch-head"><span class="ch-num">01</span><h2>網路與 HTTP</h2></div>
+<p class="why">
+      這是所有東西的地基。前端、後端、資料庫之間發生的每一件事都是 HTTP 請求，
+      不懂這層，效能問題和安全問題都只能用猜的。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>一次請求的生命週期</b>：DNS 查詢（網域換成 IP）→ TCP 連線（三次握手）→
+            TLS 握手（加密協商，還要多幾趟）→ 送出請求 → 伺服器處理 → 回應 →
+            連線重用或關閉。<strong>每一步都要時間，而且跨國的每一趟都是 0.2 秒起跳。</strong>
+</li>
+<li>
+<b>HTTP 訊息的結構</b>：起始行（方法／狀態碼）＋ headers（元資訊）＋ body（內容）。
+            關鍵在於——<strong>header 和 body 是分開送的，可以差很久</strong>。
+          </li>
+<li>
+<b>狀態碼分類</b>：2xx 成功、3xx 轉址、<strong>4xx 是你（客戶端）錯了</strong>、
+            <strong>5xx 是我（伺服器）錯了</strong>。看到 5xx 就不要在前端找原因。
+          </li>
+<li>
+<b>快取</b>：瀏覽器快取、CDN 快取各是一層。決定「能不能用舊的」靠
+            <code>Cache-Control</code>、<code>ETag</code> 這些 header。
+            <strong>而快取的鑰匙是網址——網址一樣，就可能給你舊的東西。</strong>
+</li>
+<li>
+<b>TTFB</b>（Time To First Byte）：從送出請求到收到第一個位元組。
+            它衡量的是「伺服器多久<em>開始</em>回應」，<strong>不是「多久回應<em>完</em>」</strong>。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 1 · 一次請求的五個階段（本專案實測，查詢 313 筆資料）</div>
+<div class="dia-body">
+<div class="track">
+<div class="track-lab">總計 263 ms</div>
+<div aria-label="DNS 2ms、TCP 連線 12ms、TLS 握手 18ms、等待伺服器 211ms、資料傳輸 20ms" class="track-line" role="img">
+<div class="tseg r" style="width:4%">DNS</div>
+<div class="tseg r" style="width:7%">TCP</div>
+<div class="tseg r" style="width:9%">TLS</div>
+<div class="tseg h" style="width:71%">等待伺服器回應 211 ms</div>
+<div class="tseg g" style="width:9%">傳輸</div>
+</div>
+<div class="track-marks">
+<span style="width:4%">2ms</span>
+<span style="width:7%">12ms</span>
+<span style="width:9%">18ms</span>
+<span style="width:71%">211ms</span>
+<span style="width:9%">20ms</span>
+</div>
+</div>
+<div class="chain" style="margin-top:1.3rem;">
+<div class="cbox cool">
+<div class="cl">其中資料庫真正花的時間</div>
+<div class="cv">Postgres 執行查詢</div>
+<div class="cc">7 ms</div>
+</div>
+<div class="carrow">vs</div>
+<div class="cbox hot">
+<div class="cl">其餘都是路上的時間</div>
+<div class="cv">網路來回 ＋ 連線建立</div>
+<div class="cc">256 ms</div>
+</div>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+      長條寬度為了可讀性略作調整，數字是實測值。重點在比例：
+      <strong>真正「做事」的只有 7 毫秒，其餘 97% 都花在建立連線和等待網路來回。</strong>
+      這就是為什麼效能優化常常不是「讓程式跑更快」，而是「減少往返」或「縮短距離」。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>用 header 找出程式在哪裡執行</b>：<code>x-vercel-id: hkg1::iad1</code>
+            揭露請求從香港節點進來、但函式跑在美東機房——這是整個效能問題的關鍵線索。
+          </li>
+<li>
+<b>用 header 排除嫌疑犯</b>：<code>x-envoy-upstream-service-time: 7</code>
+            直接證明資料庫只花 7 毫秒，一口氣排除掉「要不要加索引」這整條路線。
+          </li>
+<li>
+<b>用 curl 拆解一次請求的每個階段</b>：DNS / TCP / TLS / TTFB / 總計 分開量，
+            看出時間到底卡在連線建立還是資料傳輸。
+          </li>
+<li>
+<b>快取的鑰匙是網址</b>：換照片後沿用同一個檔案路徑，網址沒變，
+            瀏覽器就一直給舊圖。使用者形容成「儲存後要等很久」——
+            <strong>其實他沒在等，瀏覽器根本沒去要新的</strong>。修法是在網址後面加
+            <code>?v={時間戳}</code>。
+          </li>
+<li>
+<b>5xx 的除錯</b>：PDF 匯出連續三次 500，每次原因不同，全部都在伺服器端。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我用回應 header 來定位效能問題——<code>x-vercel-id</code> 告訴我函式的執行區域，
+          資料庫回傳的 upstream-service-time 告訴我 DB 只花 7 毫秒。
+          這兩個免費的線索就把範圍縮到『函式和資料庫之間的網路』。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的（被問到就這樣答）</div>
+<div class="block-body">
+<ul>
+<li><b>HTTP/2 與 HTTP/3</b>：多工（一條連線同時跑多個請求）解決了 HTTP/1.1 的隊頭阻塞。平台預設就開了，我沒有自己調過。</li>
+<li><b>CORS 跨來源請求</b>：這個專案是同源、加上 Supabase 已設定好，所以沒踩過。但我知道它是瀏覽器的安全機制，靠伺服器回的 <code>Access-Control-Allow-*</code> header 決定。</li>
+<li><b>Cookie 的細節屬性</b>（HttpOnly / Secure / SameSite）：由 Supabase 的函式庫代勞，我沒有自己設定過。</li>
+<li><b>速率限制</b>（Rate limiting）：沒做。這是個人專案、流量小，但如果對外開放就必須有。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch01" type="button">○ 標記這章完成</button><div class="ms-pager"><a class="disabled">← 上一章</a><a href="#ch02">下一章 →</a></div></div></section>
+<!-- ══════════ 02 ══════════ -->
+<section id="ch02">
+<div class="ch-head"><span class="ch-num">02</span><h2>前端基礎：HTML、CSS、TypeScript</h2></div>
+<p class="why">
+      框架會換，這三樣不會。而且框架解決不了的問題，最後都會退回到這一層——
+      尤其是 CSS，它有一套很多人沒認真學過的規則。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>語意化 HTML</b>：用 <code>&lt;button&gt;</code> 而不是可點的 <code>&lt;div&gt;</code>，
+            因為前者<strong>免費得到鍵盤操作、螢幕報讀器支援、正確的預設行為</strong>。
+          </li>
+<li>
+<b>CSS 特異性（specificity）</b>：不是「寫在後面的贏」，而是一套計分制——
+            <strong>ID &gt; class／屬性／偽類 &gt; 標籤</strong>。兩個 class 的選擇器
+            會贏過一個 class 的選擇器，不管誰寫在後面。
+          </li>
+<li>
+<b>排版</b>：flex（一維）與 grid（二維）＋ <code>gap</code>，
+            而不是到處補 margin（margin 會塌陷、會互相疊加）。
+          </li>
+<li>
+<b>響應式</b>：相對單位、<code>min()</code> / <code>clamp()</code> 這些現代函式，
+            很多情況下可以取代媒體查詢。
+          </li>
+<li>
+<b>TypeScript 的價值</b>：它在<strong>編譯期</strong>就告訴你哪裡會壞，
+            而不是等使用者點到才發現。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 2 · CSS 特異性計分——為什麼「寫在後面」不一定贏</div>
+<div class="dia-body">
+<div class="spec">
+<div class="spec-row lose">
+<div>
+<div class="spec-sel">.crop-modal-img</div>
+<div class="spec-note">我自己寫的：1 個 class</div>
+</div>
+<div class="spec-score">0 · 1 · 0</div>
+</div>
+<div class="spec-row win">
+<div>
+<div class="spec-sel">.ReactCrop__child-wrapper &gt; img</div>
+<div class="spec-note">套件內建：1 個 class ＋ 1 個標籤 → 分數更高，它贏了</div>
+</div>
+<div class="spec-score">0 · 1 · 1</div>
+</div>
+</div>
+<div class="zone-gap" style="padding:0.9rem 0 0.6rem;">
+<b>後果</b>
+          我設的高度上限失效 → 旋轉成直式的照片撐爆彈窗 → 「確定裁切」被擠出畫面點不到
+        </div>
+<div class="spec">
+<div class="spec-row win">
+<div>
+<div class="spec-sel">.crop-modal-stage .crop-modal-img</div>
+<div class="spec-note">修法：疊兩層 class，把分數拉到 2 → 這次換我贏</div>
+</div>
+<div class="spec-score">0 · 2 · 0</div>
+</div>
+</div>
+<div class="chain" style="margin-top:1.2rem;">
+<div class="cbox"><div class="cl">第一欄</div><div class="cv">ID 選擇器</div><div class="cc">#id</div></div>
+<div class="carrow">&gt;</div>
+<div class="cbox"><div class="cl">第二欄</div><div class="cv">class · 屬性 · 偽類</div><div class="cc">.cls [attr] :hover</div></div>
+<div class="carrow">&gt;</div>
+<div class="cbox"><div class="cl">第三欄</div><div class="cv">標籤 · 偽元素</div><div class="cc">div ::before</div></div>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+      比較規則是<strong>從左欄往右欄逐欄比</strong>——左欄只要贏一分，右欄再多也翻不了盤。
+      所以「一個 ID」永遠贏過「一百個 class」。<code>!important</code> 可以強制覆蓋，
+      但它會讓後續維護的人無從調整，通常代表結構該重新設計了。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>一個真實的特異性 bug</b>：照片裁切彈窗裡，自己寫的 <code>.crop-modal-img</code>
+            （一個 class）被套件內建的 <code>.ReactCrop__child-wrapper &gt; img</code>
+            （class ＋ 子選擇器 ＋ 標籤，分數更高）蓋掉。結果旋轉成直式的照片沒有高度上限，
+            <strong>把彈窗撐爆、「確定」按鈕被擠出畫面點不到</strong>。
+            修法是疊兩層 class 提高自己的分數。
+          </li>
+<li>
+<b>用型別系統當重構工具</b>：把 <code>color</code> 欄位從型別定義裡拿掉之後，
+            <strong>TypeScript 直接把所有還在讀舊欄位的地方標成錯誤</strong>——
+            不用自己 grep，也不會漏掉角落。這是刻意的手法，不是副作用。
+          </li>
+<li>
+<b>用 <code>min()</code> 避免中等寬度溢出</b>：
+            <code>grid-template-columns: min(720px, 55%) 1fr</code>——
+            寫死 720px 會在平板寬度撐破版面，用 <code>min()</code> 一行解決，不用加媒體查詢。
+          </li>
+<li>
+<b>stretched-link 版面技巧</b>：卡片要「整張可點」但學名文字要「可以反白複製」。
+            解法是讓一個透明連結鋪滿整張卡（<code>position:absolute; inset:0</code>），
+            文字用 <code>z-index</code> 疊在它<strong>上面</strong>——
+            點空白處導頁、拖曳文字則正常選取。
+          </li>
+<li>
+<b>grid 子項的 min-width 陷阱</b>：grid／flex 的子項預設不會縮到比內容小，
+            所以裡面只要有一個寬表格，就會把整格撐開，<strong>外層的 <code>overflow-x</code> 反而攔不住</strong>。
+            要明確設 <code>min-width: 0</code>。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我踩過一個 CSS 特異性的坑：自己寫的單一 class 樣式被第三方套件的複合選擇器蓋掉，
+          症狀是彈窗被撐爆、按鈕跑到畫面外。這讓我認真去讀了特異性的計分規則——
+          它不是後面的贏，是分數高的贏。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li><b>Tailwind / CSS-in-JS</b>：這個專案刻意用單一份純 CSS 檔（單人專案，樣式衝突風險低）。我知道 Tailwind 是用工具類別取代自訂 class，取捨是 HTML 變醜但不用煩惱命名和死碼。</li>
+<li><b>設計系統與元件庫</b>：沒有建立可複用的元件庫或 design token 體系。</li>
+<li><b>動畫效能</b>：只知道原則——動 <code>transform</code> / <code>opacity</code> 交給 GPU，動 <code>width</code> / <code>top</code> 會觸發重新排版。沒實際優化過。</li>
+<li><b>系統性的無障礙</b>：有做 <code>aria-label</code> 和鍵盤焦點樣式，但沒有跑過完整稽核工具。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch02" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch01">← 上一章</a><a href="#ch03">下一章 →</a></div></div></section>
+<!-- ══════════ 03 ══════════ -->
+<section id="ch03">
+<div class="ch-head"><span class="ch-num">03</span><h2>React 與元件模型</h2></div>
+<p class="why">
+      React 的核心思想只有一句：<strong>畫面是狀態的函數</strong>。
+      你改狀態，React 負責更新 DOM。難的不是語法，是「什麼東西該是狀態」。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li><b>宣告式 vs 命令式</b>：你描述「畫面該長什麼樣」，不是「怎麼一步步改 DOM」。</li>
+<li>
+<b><code>useState</code></b>：會觸發重新渲染的資料。
+            <b><code>useRef</code></b>：不會觸發重新渲染的資料（例如拖曳的起始座標）。
+            <strong>選錯會導致每次滑鼠移動都重畫整個元件。</strong>
+</li>
+<li>
+<b><code>useEffect</code> 的正確用途</b>：跟「React 以外的世界」同步
+            （訂閱事件、操作 DOM API）。<strong>如果你用它來「根據 props 算出 state」，
+            那通常是設計錯了</strong>——會多一輪渲染，畫面會閃。
+          </li>
+<li>
+<b><code>useLayoutEffect</code></b>：跟 <code>useEffect</code> 一樣，
+            但<strong>在瀏覽器繪製之前</strong>同步執行。需要「畫面出現前就調整好」的事情要用它。
+          </li>
+<li>
+<b><code>key</code> 的作用</b>：告訴 React「這一項還是原來那一項」。
+            <strong>用陣列索引當 key，在清單重排時會讓狀態黏在錯的項目上。</strong>
+</li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 3 · useEffect 與 useLayoutEffect 的執行時機</div>
+<div class="dia-body">
+<div class="chain">
+<div class="cbox"><div class="cl">步驟 1</div><div class="cv">React 算出新畫面</div></div>
+<div class="carrow">→</div>
+<div class="cbox"><div class="cl">步驟 2</div><div class="cv">更新 DOM</div></div>
+<div class="carrow">→</div>
+<div class="cbox cool"><div class="cl">步驟 3</div><div class="cv">useLayoutEffect</div><div class="cc">繪製前，同步執行</div></div>
+<div class="carrow">→</div>
+<div class="cbox hot"><div class="cl">步驟 4</div><div class="cv">瀏覽器繪製</div><div class="cc">使用者「看到」畫面</div></div>
+<div class="carrow">→</div>
+<div class="cbox"><div class="cl">步驟 5</div><div class="cv">useEffect</div><div class="cc">繪製後才跑</div></div>
+</div>
+<div class="vs" style="margin-top:1.2rem;">
+<div class="vs-col bad">
+<h5>用 useEffect 還原捲動位置</h5>
+<div class="vc">
+<p style="font-size:14px;margin-bottom:0.6em;">
+                瀏覽器<strong>先畫出頂端的畫面</strong>，使用者眼睛已經看到了，
+                然後 effect 才把捲軸移下去。
+              </p>
+<p style="font-size:14px;margin:0;color:var(--signal);">
+<strong>結果：畫面閃一下，先跳到頂端再跳回去。</strong>
+</p>
+</div>
+</div>
+<div class="vs-col good">
+<h5>用 useLayoutEffect</h5>
+<div class="vc">
+<p style="font-size:14px;margin-bottom:0.6em;">
+                在瀏覽器繪製<strong>之前</strong>就把捲軸移到定位，
+                所以使用者第一眼看到的就是正確位置。
+              </p>
+<p style="font-size:14px;margin:0;color:var(--go);">
+<strong>結果：沒有閃爍，像是本來就在那裡。</strong>
+</p>
+</div>
+</div>
+</div>
+<div class="zone-gap" style="padding:1rem 0 0;">
+<b>但這個專案還踩到第二層</b>
+          框架的 <code>&lt;Link&gt;</code> 導航後會自動捲到頂端，而且執行時機<strong>晚於</strong>步驟 3——
+          會把還原結果整個蓋掉。必須寫 <code>scroll={false}</code> 關掉它。
+        </div>
+</div>
+</div>
+<p class="dia-cap">
+      判斷準則很單純：<strong>「使用者不該看到中間狀態」的事情放 useLayoutEffect，其餘一律用 useEffect</strong>
+      （因為 useLayoutEffect 會擋住繪製，用多了會拖慢畫面）。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>為什麼捲動還原要用 <code>useLayoutEffect</code> 而不是 <code>useEffect</code></b>：
+            要在瀏覽器畫出畫面<strong>之前</strong>就把捲軸移到定位，
+            用 <code>useEffect</code> 的話使用者會看到「先閃到頂端、再跳下去」。
+          </li>
+<li>
+<b>但框架的預設行為會蓋掉你</b>：Next.js 的 <code>&lt;Link&gt;</code> 導航後會自動捲到頂端，
+            而且<strong>執行時機晚於</strong>你的 <code>useLayoutEffect</code>——
+            所以必須寫 <code>scroll={false}</code> 關掉它。
+            <strong>兩個東西寫同一個值時，順序決定誰贏。</strong>
+</li>
+<li>
+<b>不要用 <code>useEffect</code> 同步衍生狀態</b>：需要「外部參數變了就重設內部狀態」時，
+            選擇了在 render 期間比對前一次的值，而不是 effect＋setState。理由是
+            後者會多一輪渲染、使用者可能瞥見舊畫面，而且新版 lint 規則會擋。
+          </li>
+<li>
+<b>用 <code>useRef</code> 存拖曳狀態</b>：照片縮放拖曳時，
+            起始座標放在 <code>useRef</code>（不需要重繪），
+            當前偏移量放在 <code>useState</code>（需要重繪）。
+          </li>
+<li>
+<b>Pointer Events 與 <code>setPointerCapture</code></b>：
+            自己實作拖曳時，把指標「鎖」在元素上，這樣滑鼠拖出元素範圍也不會中斷。
+            同一套程式碼同時支援滑鼠和觸控。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我實作過『從詳細頁返回列表要回到原本捲動位置』。難點不是存位置，
+          是<strong>執行順序</strong>——框架的自動捲頂跑在我的還原邏輯之後，會把結果蓋掉。
+          解法是關掉框架的預設行為，把控制權拿回來。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li><b>全域狀態管理</b>（Redux / Zustand / Context）：這個專案的狀態放在網址和元件內就夠了。我知道當「很多層深的元件都要同一份資料」時才需要它，而不是一開始就上。</li>
+<li><b>資料抓取函式庫</b>（React Query / SWR）：處理快取、重試、背景更新、避免重複請求。這個專案是 Server Component 直接抓，沒有這個需求。</li>
+<li><b>Suspense 與 Error Boundary</b>：處理「載入中」和「壞掉了」的宣告式邊界。這個專案完全沒有 <code>loading.tsx</code>——<strong>而這正好是效能問題的成因之一</strong>（見第 04 章）。</li>
+<li><b><code>memo</code> / <code>useMemo</code> / <code>useCallback</code> 的效能優化</b>：有用 <code>useMemo</code>，但沒有真的因為渲染效能問題去調校過。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch03" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch02">← 上一章</a><a href="#ch04">下一章 →</a></div></div></section>
+<!-- ══════════ 04 ══════════ -->
+<section id="ch04">
+<div class="ch-head"><span class="ch-num">04</span><h2>渲染策略：畫面到底在哪裡被產生</h2></div>
+<p class="why">
+      這是現代前端面試最常問、也最容易答得含糊的一章。
+      核心問題只有一個：<strong>HTML 是誰產生的、什麼時候產生的。</strong>
+</p>
+<div class="block core">
+<div class="block-head">核心觀念 · 五種策略</div>
+<div class="block-body">
+<div class="table-scroll">
+<table>
+<thead><tr><th>策略</th><th>HTML 何時產生</th><th>優點</th><th>代價</th></tr></thead>
+<tbody>
+<tr><td class="k">CSR<br/>客戶端渲染</td><td>瀏覽器下載 JS 之後才畫</td><td>互動流暢、伺服器負擔小</td><td>首次白畫面久、SEO 差</td></tr>
+<tr><td class="k">SSR<br/>伺服器渲染</td><td>每次請求時在伺服器產生</td><td>首屏快、SEO 好、內容可因人而異</td><td>每次都要跑伺服器</td></tr>
+<tr><td class="k">SSG<br/>靜態產生</td><td>建置時就產好</td><td>最快，直接放 CDN</td><td>內容不能因人而異</td></tr>
+<tr><td class="k">ISR<br/>增量再生</td><td>建置時產好，之後定期更新</td><td>兼顧速度與新鮮度</td><td>可能拿到稍舊的內容</td></tr>
+<tr><td class="k">RSC<br/>伺服器元件</td><td>元件層級分別決定</td><td>細到單一元件的控制</td><td>邊界看不見，容易誤用</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>
+<b>Hydration（注水）</b>：伺服器送來的 HTML 是「靜態的圖片」，
+            瀏覽器下載 JS 之後<strong>把事件監聽器接上去</strong>，畫面才真的能點——
+            這個接電的過程叫 hydration。<strong>面試很常問這個詞。</strong>
+</li>
+<li>
+<b>Streaming（串流）</b>：伺服器<strong>先送 header，再一邊算一邊送 body</strong>。
+            好處是使用者更早看到東西。副作用是——<strong>量測時很容易把時間歸錯類</strong>。
+          </li>
+<li>
+<b>序列化（serialization）</b>：Client Component 需要的資料必須<strong>打包成文字</strong>
+            跟著送到瀏覽器。<strong>這是「資料跨越伺服器／客戶端邊界」的真正成本。</strong>
+</li>
+<li>
+<b>動態 vs 靜態路由</b>：只要讀了 cookie 或查詢參數，這個頁面就是「動態」的——
+            <strong>不能被預先產生、也不能被完整預抓</strong>。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 4 · 序列化邊界——成本不在「跑在哪裡」，在「資料有沒有跨線」</div>
+<div class="dia-body">
+<div class="vs">
+<div class="vs-col bad">
+<h5>列表頁 · 送出 214 KB</h5>
+<div class="vc">
+<div class="zone plain">
+<div class="zl">伺服器區</div>
+<ul>
+<li><b>page.tsx</b>（Server）</li>
+<li>查資料庫 → 313 筆在記憶體裡</li>
+</ul>
+</div>
+<div class="zone-gap">
+<b>↓ 序列化 211 KB ↓</b>
+                資料必須打包成文字才能過線
+              </div>
+<div class="zone danger">
+<div class="zl">客戶端區 · 需要互動</div>
+<ul>
+<li><b>HomeContent</b>（Client）<br/>← 篩選排序按鈕要 onClick</li>
+<li>└ SpeciesExplorer</li>
+<li>  └ SpeciesCard<br/><span style="font-size:12px;">（沒寫 use client，但被 import 就跟著過線）</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="vs-col good">
+<h5>詳細頁 · 送出 7.8 KB</h5>
+<div class="vc">
+<div class="zone plain">
+<div class="zl">伺服器區</div>
+<ul>
+<li><b>species/[id]/page.tsx</b>（Server）</li>
+<li>查資料庫 → <strong>同樣 313 筆</strong></li>
+<li>算出上一張／下一張</li>
+<li><strong>算完就丟</strong></li>
+</ul>
+</div>
+<div class="zone-gap" style="color:var(--go);">
+<b>↓ 只送渲染結果 ↓</b>
+                原始資料完全沒有過線
+              </div>
+<div class="zone safe">
+<div class="zl">客戶端區</div>
+<ul>
+<li>只有 DetailPhoto（Client）</li>
+<li>它只需要一個網址字串</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+<strong>兩邊做的資料庫查詢一模一樣</strong>，差別只在資料有沒有被送到瀏覽器。
+      這就是 RSC 真正的心智模型——不是「這段程式在哪裡執行」，
+      而是<strong>「這份資料需不需要跨過那條線」</strong>。跨線就要付序列化與傳輸的錢。
+    </p>
+<div class="dia">
+<div class="dia-head">圖 5 · 串流：header 先送、body 後送——量測陷阱的來源</div>
+<div class="dia-body">
+<div class="track">
+<div class="track-lab">多數人以為的樣子（回應是一整包）</div>
+<div aria-label="傳統認知：等待後回應一次全部到達" class="track-line" role="img">
+<div class="tseg w" style="width:70%">等待伺服器</div>
+<div class="tseg g" style="width:30%">回應整包到達 ✓</div>
+</div>
+</div>
+<div class="track">
+<div class="track-lab">串流實際的樣子（本專案實測）</div>
+<div aria-label="串流實際：header 在 0.37 秒到達，body 持續傳送到 1.8 秒才到齊" class="track-line" role="img">
+<div class="tseg w" style="width:20%">等待</div>
+<div class="tseg r" style="width:8%">header</div>
+<div class="tseg h" style="width:70%">body 邊算邊送……</div>
+<div class="tseg g" style="width:2%"></div>
+</div>
+<div class="track-marks">
+<span style="width:20%">0</span>
+<span style="width:8%">0.37s</span>
+<span style="width:70%">→</span>
+<span style="width:2%">1.8s</span>
+</div>
+</div>
+<div class="chain" style="margin-top:1.2rem;">
+<div class="cbox hot">
+<div class="cl">測試工具的「收到回應」事件</div>
+<div class="cv">在 header 到達就觸發</div>
+<div class="cc">0.37 s ← 舊測法在這裡宣告「伺服器完成」</div>
+</div>
+<div class="carrow">≠</div>
+<div class="cbox cool">
+<div class="cl">body 真正下載完</div>
+<div class="cv">responseEnd</div>
+<div class="cc">1.8 s ← 真正的伺服器結束時間</div>
+</div>
+</div>
+<div class="zone-gap" style="padding-top:0.9rem;">
+<b>中間這 1.4 秒被誤記到前端頭上</b>
+          於是得出「前端渲染太慢」的錯誤結論，並排了三個打錯目標的方案
+        </div>
+</div>
+</div>
+<p class="dia-cap">
+      串流的<strong>設計目的</strong>就是盡早把 header 送出去讓瀏覽器開始準備——
+      也就是說它會<strong>刻意把 header 和 body 的間隔拉大</strong>。
+      這正是為什麼在最多人用的現代框架上，這個量測誤差反而最嚴重。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>Server / Client Component 的判斷標準</b>：預設全部是 Server；
+            只有需要「記住狀態、處理事件、用瀏覽器專屬 API」時才寫 <code>"use client"</code>。
+          </li>
+<li>
+<b><code>"use client"</code> 標的是「邊界」不是「檔案」</b>：
+            卡片元件本身沒寫這個指令，但它被 Client Component import，
+            <strong>整包就跟著跨到客戶端</strong>。實務建議是把這個指令盡量往下推。
+          </li>
+<li>
+<b>序列化的實際代價</b>：列表頁的互動元件需要全部 313 筆資料當 props，
+            所以<strong>整份資料被打包進回應，壓縮前 211 KB</strong>。
+            對照組是詳細頁——同樣撈了 313 筆，但它是 Server Component，算完就丟，只送 7.8 KB。
+          </li>
+<li>
+<b>Streaming 造成的量測陷阱</b>：header 在 0.37 秒就送出，body 卻到 1.8 秒才送完。
+            用「收到回應」事件當終點，會把 1.4 秒的伺服器時間誤記到前端頭上。（完整案例見第 09 章）
+          </li>
+<li>
+<b>缺少 <code>loading.tsx</code> 的連鎖後果</b>：因為 <code>/</code> 是動態路由，
+            框架的預設預抓只會抓到「最近的 loading 邊界」為止——
+            <strong>而這個專案一個都沒有，所以什麼都沒抓</strong>。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我實際量過 Server Component 和 Client Component 的成本差異：
+          同樣是撈 313 筆資料，Server Component 算完就丟只送 7.8 KB，
+          Client Component 因為要當 props 傳，整份資料被序列化成 211 KB 送到瀏覽器。
+          這讓我理解到 RSC 的重點不是『在哪裡跑』，而是<strong>『資料要不要跨越那條邊界』</strong>。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li><b>SSG / ISR</b>：這個專案所有頁面都是動態（要判斷登入）。如果是部落格或商品頁，SSG＋ISR 會是更好的選擇。</li>
+<li><b>Partial Prerendering</b>：把靜態外殼和動態內容混在同一頁的較新做法。</li>
+<li><b>Edge Runtime vs Node Runtime</b>：Edge 啟動快、離使用者近，但 API 受限（不能用原生模組）。<strong>這個專案的 PDF 匯出就必須用 Node runtime，因為它需要原生二進位檔。</strong></li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch04" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch03">← 上一章</a><a href="#ch05">下一章 →</a></div></div></section>
+<!-- ══════════ 05 ══════════ -->
+<section id="ch05">
+<div class="ch-head"><span class="ch-num">05</span><h2>後端與 API</h2></div>
+<p class="why">
+      後端的工作只有三件：<strong>接收請求、驗證與處理、回傳結果</strong>。
+      複雜度來自「跑在什麼樣的機器上」和「怎麼跟前端約定格式」。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>兩種伺服器模型</b>：
+            <strong>長駐伺服器</strong>（一直開著，有記憶體狀態，可以放連線池和快取）
+            vs <strong>Serverless</strong>（有請求才啟動、跑完就關、無狀態、按次計費）。
+            Serverless 的代價是<strong>冷啟動</strong>和<strong>不能保存跨請求的狀態</strong>。
+          </li>
+<li>
+<b>API 風格</b>：<strong>REST</strong>（用網址表示資源、用 HTTP 動詞表示操作）、
+            <strong>GraphQL</strong>（前端自己描述要什麼欄位，解決過度抓取）、
+            <strong>RPC</strong>（直接呼叫遠端函式）。
+          </li>
+<li>
+<b>中介層 middleware</b>：在請求到達真正的處理邏輯之前先攔一手——
+            驗證身分、記錄、轉址。<strong>集中處理跨路由的共同邏輯。</strong>
+</li>
+<li>
+<b>驗證永遠在伺服器端做</b>。前端驗證只是為了體驗好，不是安全機制。
+          </li>
+<li>
+<b>BaaS</b>（Backend as a Service）：把資料庫＋登入＋檔案儲存打包成現成服務，
+            前端直接呼叫，<strong>不用自己寫也不用自己維運後端</strong>。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 6 · 長駐伺服器 vs Serverless——為什麼「省事」是有代價的</div>
+<div class="dia-body">
+<div class="track">
+<div class="track-lab">長駐伺服器 · 開機一次，之後每個請求都很輕</div>
+<div aria-label="長駐伺服器：只有第一次要啟動與建立連線，之後每個請求都只有處理時間" class="track-line" role="img">
+<div class="tseg h" style="width:22%">啟動＋建連線</div>
+<div class="tseg g" style="width:13%">請求 1</div>
+<div class="tseg g" style="width:13%">請求 2</div>
+<div class="tseg g" style="width:13%">請求 3</div>
+<div class="tseg g" style="width:13%">請求 4</div>
+<div class="tseg g" style="width:13%">請求 5</div>
+<div class="tseg g" style="width:13%">請求 6</div>
+</div>
+</div>
+<div class="track">
+<div class="track-lab">Serverless · 每個請求都從零開始</div>
+<div aria-label="Serverless：每個請求都要重新冷啟動與建立連線" class="track-line" role="img">
+<div class="tseg h" style="width:22%">冷啟動＋建連線</div>
+<div class="tseg g" style="width:11%">請求 1</div>
+<div class="tseg h" style="width:22%">冷啟動＋建連線</div>
+<div class="tseg g" style="width:11%">請求 2</div>
+<div class="tseg h" style="width:22%">冷啟動＋建連線</div>
+<div class="tseg g" style="width:12%">請求 3</div>
+</div>
+</div>
+<div class="vs" style="margin-top:1.3rem;">
+<div class="vs-col good">
+<h5>Serverless 換到的好處</h5>
+<div class="vc">
+<ul class="plain" style="margin:0;">
+<li style="font-size:14px;">沒人用就不花錢，流量爆量自動長出更多實例</li>
+<li style="font-size:14px;">不用管機器、修補、擴充</li>
+<li style="font-size:14px;">一個人也維運得起來</li>
+</ul>
+</div>
+</div>
+<div class="vs-col bad">
+<h5>付出的代價</h5>
+<div class="vc">
+<ul class="plain" style="margin:0;">
+<li style="font-size:14px;"><strong>冷啟動延遲</strong></li>
+<li style="font-size:14px;"><strong>無狀態</strong>——不能在記憶體放快取</li>
+<li style="font-size:14px;"><strong>連線無法重用</strong>，每次都要重新握手<br/>（這正是本專案 0.6–1.4 秒的一部分）</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+      這也解釋了為什麼<strong>連線池</strong>是 serverless 的經典難題：
+      每個實例各自開連線、又無法互相共用，很容易把資料庫的連線數打爆。
+      業界解法是在中間加一層外部連線池（例如 PgBouncer、或雲端資料庫自帶的 pooler）。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>Serverless 的真實代價</b>：函式跑在美東機房，每次請求都要跨機房去拿資料，
+            <strong>0.6–1.4 秒</strong>——而資料庫本身只花 7 毫秒。
+            這是「無狀態、每次重來」的直接後果：<strong>沒有連線池可以重用</strong>。
+          </li>
+<li>
+<b>中介層做路由保護</b>：<code>proxy.ts</code> 攔截需要登入的路徑，
+            未登入就導向 <code>/login?next=原路徑</code>，同時順便刷新 session。
+            <strong>四個受保護路由集中在一個正規表達式陣列裡</strong>，不用在每頁各寫一次。
+          </li>
+<li>
+<b>Route Handler</b>：<code>/api/export-pdf</code> 是這個專案唯一自己寫的 API，
+            負責在伺服器上開無頭瀏覽器把網頁印成 PDF。
+          </li>
+<li>
+<b>沒有自己寫 CRUD API</b>：Supabase 用 PostgREST <strong>自動把資料表變成 REST API</strong>，
+            前端直接呼叫。省下大量樣板程式碼，代價是<strong>權限必須完全靠資料庫的 RLS 把關</strong>——
+            因為沒有一層自己的 API 可以做檢查。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我踩過 serverless 的一個典型問題：函式是無狀態的，每次冷啟動都要重新建立到資料庫的連線，
+          加上函式和資料庫不在同一個區域，一次查詢要 0.6 到 1.4 秒，
+          但資料庫自己只花 7 毫秒。這讓我理解到 serverless 的省事是有代價的。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的（這章缺口最多，要誠實）</div>
+<div class="block-body">
+<ul>
+<li><b>自己設計一套 REST API</b>：資源怎麼命名、版本怎麼管、錯誤格式怎麼統一、分頁怎麼設計。這個專案完全由 BaaS 代勞。</li>
+<li><b>GraphQL</b>：知道它解決「前端要的欄位跟後端給的對不上」的問題，但沒實作過。</li>
+<li><b>連線池</b>（connection pooling）：<strong>serverless 的經典難題</strong>——每個函式實例各自開連線，很容易把資料庫的連線數打爆。解法是外部連線池（如 Supabase 的 pooler、PgBouncer）。</li>
+<li><b>背景工作與佇列</b>：耗時的事情（寄信、產報表）應該丟到佇列非同步處理，而不是讓使用者等。這個專案的 PDF 匯出是同步的。</li>
+<li><b>即時推播</b>（WebSocket）：Supabase 有內建，這個專案沒用到。多人同時編輯的情境會需要。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch05" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch04">← 上一章</a><a href="#ch06">下一章 →</a></div></div></section>
+<!-- ══════════ 06 ══════════ -->
+<section id="ch06">
+<div class="ch-head"><span class="ch-num">06</span><h2>資料庫</h2></div>
+<p class="why">
+      程式碼壞了可以改，<strong>資料壞了通常救不回來</strong>。
+      而且資料庫是唯一一個「你的程式碼不完全控制它」的地方——它有自己的狀態、自己的規則。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>約束 constraint</b>：讓資料庫自己擋掉不合法的資料
+            （非空、唯一、外鍵、check）。<strong>放在資料庫的規則沒有人能繞過</strong>，
+            放在程式碼的規則只要有另一個入口就失效。
+          </li>
+<li>
+<b>索引 index</b>：為了避免「整張表掃一遍」。
+            <strong>不同資料型態要用不同索引</strong>——一般欄位用 B-tree，
+            但<strong>陣列的「包含」查詢用 B-tree 完全無效，要用 GIN</strong>。
+          </li>
+<li>
+<b>交易 transaction</b>：把多個操作綁成一個「全部成功或全部不做」的單位。
+            <strong>只要有一步失敗，前面的都會回復。</strong>
+</li>
+<li>
+<b>遷移 migration</b>：資料庫結構的版本控制。
+            <strong>好的遷移腳本必須能重複執行而不出錯</strong>（冪等）。
+          </li>
+<li>
+<b>N+1 查詢問題</b>：先查一次拿到 N 筆，再對每一筆各查一次 → 總共 N+1 次往返。
+            <strong>這是最常見的效能殺手</strong>，解法是 JOIN 或批次查詢。
+          </li>
+<li>
+<b>正規化 vs 反正規化</b>：前者避免重複儲存，後者為了效能刻意複製一份。
+          </li>
+<li>
+<b>沒有 <code>ORDER BY</code> 就沒有順序保證</b>。回傳順序是未定義的，不保證每次一樣。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 7 · N+1 查詢問題——最常見的效能殺手</div>
+<div class="dia-body">
+<div class="vs">
+<div class="vs-col bad">
+<h5>N+1 · 4 次往返</h5>
+<div class="vc">
+<div class="chain" style="margin-bottom:0.5rem;">
+<div class="cbox hot"><div class="cl">查詢 1</div><div class="cv">拿到 3 筆文章</div></div>
+</div>
+<div class="chain" style="margin-bottom:0.5rem;">
+<div class="cbox hot"><div class="cl">查詢 2</div><div class="cv">文章 A 的作者</div></div>
+</div>
+<div class="chain" style="margin-bottom:0.5rem;">
+<div class="cbox hot"><div class="cl">查詢 3</div><div class="cv">文章 B 的作者</div></div>
+</div>
+<div class="chain" style="margin-bottom:0.7rem;">
+<div class="cbox hot"><div class="cl">查詢 4</div><div class="cv">文章 C 的作者</div></div>
+</div>
+<p style="font-size:13.5px;margin:0;color:var(--signal);">
+<strong>3 筆資料 → 4 次往返。300 筆 → 301 次。</strong>
+                每次往返如果是 200 毫秒，就是整整一分鐘。
+              </p>
+</div>
+</div>
+<div class="vs-col good">
+<h5>JOIN · 1 次往返</h5>
+<div class="vc">
+<div class="chain" style="margin-bottom:0.7rem;">
+<div class="cbox cool">
+<div class="cl">查詢 1（唯一一次）</div>
+<div class="cv">文章 JOIN 作者<br/>一次拿回全部</div>
+</div>
+</div>
+<p style="font-size:13.5px;margin:0;color:var(--go);">
+<strong>不管 3 筆還是 300 筆，都是 1 次往返。</strong>
+                資料庫在自己內部做關聯，遠比跨網路來回便宜。
+              </p>
+</div>
+</div>
+</div>
+<div class="zone-gap" style="padding-top:1rem;">
+<b>這個專案沒遇到 N+1</b>
+          因為它走了另一個極端——「一次全撈」。而那製造了另一種問題（見第 09 章）。
+        </div>
+</div>
+</div>
+<p class="dia-cap">
+      名字的由來：<strong>1 次查清單 ＋ N 次查每一筆的細節 ＝ N+1 次</strong>。
+      它在本機幾乎測不出來（本機往返只要 1 毫秒），一上正式環境就爆炸——
+      這是「本機會動 ≠ 部署會動」的另一種形式。
+    </p>
+<div class="dia">
+<div class="dia-head">圖 8 · 交易（transaction）——以及這個專案刻意不做的地方</div>
+<div class="dia-body">
+<div class="vs">
+<div class="vs-col good">
+<h5>有交易保護：全有或全無</h5>
+<div class="vc">
+<div class="chain">
+<div class="cbox"><div class="cl">步驟 1</div><div class="cv">扣款 ✓</div></div>
+<div class="carrow">→</div>
+<div class="cbox hot"><div class="cl">步驟 2</div><div class="cv">入帳 ✗ 失敗</div></div>
+</div>
+<div class="zone-gap" style="color:var(--go);padding:0.7rem 0;">
+<b>↓ 自動回復 ↓</b>
+</div>
+<div class="zone safe">
+<div class="zl">結果</div>
+<ul><li>錢回到原本的帳戶，<strong>就像什麼都沒發生過</strong></li></ul>
+</div>
+</div>
+</div>
+<div class="vs-col bad">
+<h5>本專案的照片上傳：沒有交易</h5>
+<div class="vc">
+<div class="chain">
+<div class="cbox cool"><div class="cl">步驟 1</div><div class="cv">上傳照片到 Storage ✓</div></div>
+<div class="carrow">→</div>
+<div class="cbox hot"><div class="cl">步驟 2</div><div class="cv">寫入資料列 ✗ 失敗</div></div>
+</div>
+<div class="zone-gap" style="padding:0.7rem 0;">
+<b>↓ 沒有東西會回復 ↓</b>
+</div>
+<div class="zone danger">
+<div class="zl">結果</div>
+<ul><li>Storage 留下一個<strong>沒有任何資料指向它的孤兒檔案</strong></li></ul>
+</div>
+</div>
+</div>
+</div>
+<div class="zone-gap" style="padding-top:1.1rem;">
+<b>為什麼刻意不做回滾</b>
+          回滾動作要在「錯誤處理路徑」裡再打一次 Storage API——
+          而那條路徑最可能發生的原因就是網路不通，補救動作同樣會失敗。<br/>
+<strong>評估後選擇接受，跟不知道有這個問題，是兩回事。</strong>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+      關鍵限制：<strong>交易只能保護「同一個資料庫內」的操作</strong>。
+      一旦跨越兩個不同的系統（這裡是檔案儲存和資料庫），就沒有現成的原子性可用——
+      要自己處理，或明確接受不一致。這在面試裡是很有份量的一個認知。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>Generated column（自動計算欄位）</b>：屬名不是存進去的，
+            是資料庫用 <code>split_part(scientific_name, ' ', 1)</code> 自動算的，前端唯讀。
+            好處是<strong>不可能出現「學名改了但屬名忘了改」</strong>。
+            <br/>
+<strong>但它會忠實放大上游的粗心</strong>：「有沒有分類」的定義是「學名不是 null」，
+            如果表單把空欄位送成 <code>""</code> 而不是 <code>null</code>，
+            這筆就變成「已分類、但學名是空的」。所以所有選填欄位送出前都要正規化成 <code>null</code>。
+            <strong><code>""</code> 和 <code>null</code> 是兩件不同的事。</strong>
+</li>
+<li>
+<b>陣列欄位與 GIN 索引</b>：顏色改成可複選（<code>text[]</code>）時，
+            <strong>原本的 B-tree 索引要換成 GIN</strong>——因為 B-tree 對「陣列裡有沒有包含某個值」
+            這種查詢完全派不上用場。
+          </li>
+<li>
+<b>刻意不加 check constraint</b>：顏色和家族是自由詞彙，
+            <strong>加了約束等於把「使用者可以自由新增」這個功能擋死</strong>。
+            這是有意識的取捨，寫進了文件——不是忘記加。
+          </li>
+<li>
+<b>冪等遷移</b>：整份 schema 檔用 <code>add column if not exists</code>、
+            <code>drop policy if exists</code> 再 create，
+            資料回填還加了守衛條件避免重複執行時被套用兩次。<strong>全檔 51 處這樣的寫法。</strong>
+</li>
+<li>
+<b>Schema 漂移（schema drift）</b>：資料庫裡曾經有一個欄位，
+            但程式碼和 schema 檔都沒有它——一個被放棄的分支留下的孤兒。
+            後來建立了明確慣例：<strong>還有資料價值的舊欄位保留當備援快照，
+            作廢功能產生的純複製欄位當場砍掉</strong>。
+          </li>
+<li>
+<b>反正規化的實例</b>：「誰新增的」存的是<strong>名字的快照</strong>而不是關聯 ID。
+            代價是使用者改名後舊資料還顯示舊名字——這是刻意接受的。
+          </li>
+<li>
+<b>少一個 <code>ORDER BY</code> 的隱形 bug</b>：兩個頁面共用排序邏輯，
+            但其中一個的查詢漏了排序。結果兩邊<strong>資料集合完全相同、只有順序不同</strong>，
+            所以群組數、筆數、總計<strong>全部正確</strong>，只有「下一張」默默指錯。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我把一個單值欄位改成陣列時，發現原本的 B-tree 索引對『陣列包含』查詢完全無效，
+          必須換成 GIN。另外我也刻意<strong>不</strong>加 check constraint——
+          因為那個欄位的產品需求就是要讓使用者自由擴充值域，加了約束等於把功能擋死。
+          我覺得知道『什麼時候不要用某個技術』跟知道怎麼用一樣重要。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的（重要缺口）</div>
+<div class="block-body">
+<ul>
+<li>
+<b>交易 transaction</b>——<strong>而且這個專案有一個真實的後果</strong>：
+            「上傳照片」和「寫入資料列」是兩個獨立操作，<strong>不是原子的</strong>。
+            上傳成功但寫入失敗時，Storage 會留下一個沒人指向的孤兒檔案。
+            當初評估過要不要回滾，結論是<strong>不做</strong>——因為回滾要在錯誤處理路徑裡再打一次 API，
+            而那條路徑最可能是網路不通的時候，補救動作同樣會失敗。
+            <strong>這是「知道問題存在、評估後選擇接受」，跟不知道是兩回事。</strong>
+</li>
+<li><b>JOIN 與多表關聯</b>：這個專案幾乎是單表，沒有複雜的關聯查詢。</li>
+<li><b>N+1 問題</b>：沒遇過，因為採取「一次全撈」的策略——這反而製造了另一種問題（見第 09 章）。</li>
+<li><b>查詢計畫分析</b>（<code>EXPLAIN ANALYZE</code>）：沒用過。資料量太小，索引效果看不出來。</li>
+<li><b>資料庫備份與還原</b>：只有 Supabase 內建的，沒有自己建立備份流程。<strong>這是已知的風險，記錄在待辦裡。</strong></li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch06" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch05">← 上一章</a><a href="#ch07">下一章 →</a></div></div></section>
+<!-- ══════════ 07 ══════════ -->
+<section id="ch07">
+<div class="ch-head"><span class="ch-num">07</span><h2>身分驗證與安全</h2></div>
+<p class="why">
+      這一章的每一個錯誤都是<strong>真的會出事</strong>的錯誤。
+      而且安全問題的特徵是——<strong>它平常不會報錯，出事的時候已經來不及了</strong>。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>認證 ≠ 授權</b>。認證（authentication）是「你是誰」，
+            授權（authorization）是「你能做什麼」。<strong>兩件事要分開想。</strong>
+</li>
+<li>
+<b>永遠不要信任客戶端送來的東西</b>——包括 cookie。
+            使用者可以打開開發者工具改掉任何前端的值。
+          </li>
+<li>
+<b>最小權限原則</b>：每一把金鑰、每一個角色，只給剛好夠用的權限。
+          </li>
+<li>
+<b>常見攻擊</b>：<strong>XSS</strong>（注入惡意腳本）、
+            <strong>CSRF</strong>（借用你的登入狀態發請求）、
+            <strong>SQL injection</strong>（把指令混進輸入）、
+            <strong>開放式轉址</strong>（把轉址參數改成惡意網站）。
+          </li>
+<li>
+<b>秘密管理</b>：金鑰放環境變數不放程式碼。
+            <strong>而且要分清楚哪些金鑰是「可以公開的」、哪些絕對不能外流。</strong>
+</li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 9 · 信任邊界——這條線以上的東西，使用者全部可以改</div>
+<div class="dia-body">
+<div class="zone danger">
+<div class="zl">⚠ 不可信任區 · 使用者完全控制</div>
+<ul>
+<li><b>畫面上藏起來的按鈕</b> — 打開開發者工具就看得到、也能繞過</li>
+<li><b>前端的表單驗證</b> — 可以直接改，或根本不用畫面直接打 API</li>
+<li><b>Cookie 的內容</b> — 可以偽造</li>
+<li><b><code>getSession()</code> 讀到的東西</b> — 它讀的就是上面那個可偽造的 cookie</li>
+<li><b>網址參數</b> — 例如 <code>?next=//evil.com</code> 可以被構造成釣魚轉址</li>
+</ul>
+</div>
+<div class="zone-gap">
+<b>━━━━━━ 信任邊界 ━━━━━━</b>
+          所有真正的檢查都必須發生在這條線<strong>以下</strong>
+</div>
+<div class="zone safe">
+<div class="zl">✓ 可信任區 · 使用者碰不到</div>
+<ul>
+<li><b><code>getUser()</code></b> — 拿 token 去問伺服器「這個人到底是誰」</li>
+<li><b>中介層的路由保護</b> — 在請求到達頁面之前就攔下來</li>
+<li><b>資料庫的 RLS 規則</b> — <strong>連 API 都繞不過，這是最後也最硬的一道</strong></li>
+<li><b>只接受站內相對路徑的轉址檢查</b> — 在伺服器端判斷</li>
+</ul>
+</div>
+<div class="chain" style="margin-top:1.3rem;">
+<div class="cbox cool">
+<div class="cl">可以公開的金鑰</div>
+<div class="cv">NEXT_PUBLIC_ 前綴</div>
+<div class="cc">會被打包進瀏覽器<br/>權限完全由 RLS 決定</div>
+</div>
+<div class="carrow">vs</div>
+<div class="cbox hot">
+<div class="cl">絕不能外流的金鑰</div>
+<div class="cv">service role key</div>
+<div class="cc">無視所有權限規則<br/>本專案刻意從未放入</div>
+</div>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+<code>NEXT_PUBLIC_</code> 這個前綴是很好的設計——
+      <strong>它把「這個值會被公開」變成你在命名時就必須面對的決定</strong>，
+      而不是等到外流才發現。驗證權限的正確方式也來自這張圖：
+      <strong>要用「繞過前端、直接打資料庫」的方式測試</strong>，因為攻擊者就是這樣做的。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>一個聰明的存取模型設計</b>：需求是「只有我邀請的人能編輯」。
+            做法不是自己維護一份白名單，而是<strong>把公開註冊關掉</strong>——
+            這樣「已登入」就自動等於「被邀請過的人」，
+            <strong>權限規則只要寫「登入者可以」就夠了</strong>。
+            用設定消除了一整套需要維護的程式碼。
+          </li>
+<li>
+<b>RLS（Row Level Security）是真正的權限邊界</b>：
+            規則寫在資料庫本身，<strong>連 API 都繞不過</strong>。
+            前端把按鈕藏起來只是體驗，不是安全。
+          </li>
+<li>
+<b>驗證方式也要繞過前端</b>：拿匿名金鑰<strong>直接對資料庫發送新增／修改／刪除</strong>，
+            確認每一種都真的被拒絕——這比在畫面上點一點可靠得多。
+          </li>
+<li>
+<b><code>getUser()</code> vs <code>getSession()</code></b>：
+            後者讀的是 cookie 內容（<strong>可以被偽造</strong>），
+            前者會真的拿 token 去問伺服器。<strong>凡是「決定能不能做某件事」一律用前者。</strong>
+<br/>
+            專案有一處用了 <code>getSession()</code>，但那是問「邀請連結有沒有換到 session」——
+            <strong>本地狀態檢查，不是授權判斷</strong>。規則不是「永遠不用」，
+            是<strong>「不要用讀本地資料的方法決定權限」</strong>。
+          </li>
+<li>
+<b>開放式轉址防護</b>：登入後要導回原路徑，參數來自網址。
+            如果不檢查，別人可以構造 <code>?next=//evil.com</code> 把使用者導去釣魚網站。
+            防護只有一行：<strong>只接受以 <code>/</code> 開頭、但不是 <code>//</code> 開頭的字串</strong>。
+          </li>
+<li>
+<b>可公開金鑰 vs 絕對不能外流的金鑰</b>：
+            這個專案的金鑰帶有 <code>NEXT_PUBLIC_</code> 前綴——
+            <strong>這個前綴代表它會被打包進瀏覽器，任何人都看得到</strong>。
+            之所以安全，是因為<strong>它的權限完全由 RLS 決定</strong>。
+            而 service role 金鑰會<strong>無視所有權限規則</strong>，
+            所以刻意<strong>從來沒有放進這個專案</strong>。
+          </li>
+<li>
+<b>失效 session 的死結</b>：cookie 還在效期內，前端以為已登入，
+            但每次查資料都被拒絕，畫面只顯示一句英文錯誤，<strong>使用者不可能自己想到要清 cookie</strong>。
+            解法是偵測到「明確被拒絕」時自動清除 cookie。
+            <strong>關鍵細節：只有明確拒絕才算</strong>——網路暫時失敗和 5xx 不算，
+            否則網路抖一下就把所有人登出。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我設計過一個邀請制的存取模型。關鍵決定是<strong>不自己維護白名單</strong>——
+          而是把公開註冊關掉，讓『已登入』自動等於『被邀請過』，
+          權限規則就簡化成一條。另外我驗證權限的方式是<strong>拿匿名金鑰直接打資料庫</strong>，
+          確認寫入真的被拒絕，而不是只看前端有沒有藏按鈕。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li><b>OAuth / SSO</b>（用 Google、GitHub 登入）：知道大致流程是「導去第三方 → 拿到授權碼 → 換 token」，但沒實作過。</li>
+<li><b>雙因素驗證</b>：沒做。</li>
+<li><b>CSRF token</b>：沒有自己處理，因為靠 SameSite cookie 加上沒有傳統的表單 POST。</li>
+<li><b>XSS 防護的細節</b>：React 預設會轉義輸出，所以沒有主動處理過。但我知道 <code>dangerouslySetInnerHTML</code> 會繞過這層保護。</li>
+<li><b>稽核日誌</b>：誰在什麼時候改了什麼，完全沒有記錄。<strong>刪除也沒有還原機制</strong>——這是已知風險。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch07" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch06">← 上一章</a><a href="#ch08">下一章 →</a></div></div></section>
+<!-- ══════════ 08 ══════════ -->
+<section id="ch08">
+<div class="ch-head"><span class="ch-num">08</span><h2>部署與維運（DevOps）</h2></div>
+<p class="why">
+      「在我電腦上會動」是工程師最著名的一句藉口。這一章就是在講
+      <strong>為什麼本機和正式環境永遠不一樣</strong>，以及怎麼縮小那個差距。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li><b>環境分離</b>：開發 / 預覽 / 正式，各自有獨立的設定和資料。</li>
+<li>
+<b>環境變數與秘密</b>：設定不寫死在程式碼裡。
+            <strong>而且要分清楚哪些變數會被打包進前端</strong>（那就等於公開）。
+          </li>
+<li>
+<b>CI / CD</b>：CI 是「每次提交自動檢查」（跑測試、跑 lint），
+            CD 是「檢查過就自動部署」。
+          </li>
+<li>
+<b>CDN 與邊緣節點</b>：靜態內容放在離使用者近的地方。
+            <strong>但注意——邊緣節點通常只是入口，真正跑程式的地方可能在很遠的機房。</strong>
+</li>
+<li>
+<b>區域選擇與資料重力</b>：運算應該<strong>靠近資料</strong>。
+            資料通常比程式碼重，搬運資料的成本遠大於搬運運算。
+          </li>
+<li>
+<b>觀測性</b>：logs（發生了什麼）、metrics（數字趨勢）、traces（一次請求走過哪些環節）。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 10 · 為什麼「本機會動、部署掛掉」——打包工具的視角</div>
+<div class="dia-body">
+<div class="vs">
+<div class="vs-col good">
+<h5>本機執行</h5>
+<div class="vc">
+<div class="zone plain">
+<div class="zl">你的電腦</div>
+<ul>
+<li>整個 <code>node_modules</code> 都在</li>
+<li>程式要什麼，隨手就拿得到</li>
+<li><strong>所以一定會動</strong></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="vs-col bad">
+<h5>部署到雲端</h5>
+<div class="vc">
+<div class="zone plain">
+<div class="zl">打包工具做的事</div>
+<ul>
+<li>掃描程式碼的 <code>import</code></li>
+<li>只打包<strong>掃得到的檔案</strong></li>
+<li>（為了讓部署包夠小、啟動夠快）</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="chain" style="margin-top:1.2rem;">
+<div class="cbox cool">
+<div class="cl">看得見 ✓</div>
+<div class="cv">import 寫在程式碼裡的模組</div>
+<div class="cc">靜態分析掃得到 → 打包</div>
+</div>
+<div class="carrow">|</div>
+<div class="cbox hot">
+<div class="cl">看不見 ✗</div>
+<div class="cv">執行當下才動態載入的<br/>原生二進位檔</div>
+<div class="cc">掃不到 → 沒打包 → 部署後 500</div>
+</div>
+</div>
+<div class="zone-gap" style="padding-top:1rem;">
+<b>本專案的實際遭遇：連續三次 500</b>
+          ① 無頭瀏覽器啟動模式在雲端不適用 →
+          ② 影像處理套件的原生檔沒被打包 →
+          ③ 瀏覽器本體的執行檔也沒被打包<br/>
+<strong>而且修法本身還有陷阱</strong>：用精確路由路徑當設定鍵值沒生效，換萬用字元才成功——
+          這是讀框架的建置原始碼才找出來的。
+        </div>
+</div>
+</div>
+<p class="dia-cap">
+      通則：<strong>任何「不是靠 import 取得」的依賴，打包工具都看不見</strong>——
+      原生二進位檔、動態產生的路徑、設定檔、字型檔都算。這類東西一律要手動宣告。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b><code>NEXT_PUBLIC_</code> 前綴的意義</b>：這個前綴代表變數<strong>會被打包進瀏覽器</strong>。
+            所以它天生只能放「可以公開的東西」。
+            <strong>這是一個很好的設計——它把「這個秘密會外流」變成命名時就要面對的決定。</strong>
+</li>
+<li>
+<b>打包工具「看得見的」和程式「實際需要的」是兩件事</b>：
+            PDF 匯出功能在本機完全正常，部署後連續三次 500。
+            原因是部署時靠<strong>靜態分析</strong>掃描 import 決定要打包哪些檔案，
+            而<strong>原生二進位檔是執行時才動態載入的——分析器看不見</strong>。
+            必須手動宣告要額外包含哪些檔案。
+          </li>
+<li>
+<b>而且設定本身也有陷阱</b>：用精確的路由路徑當設定的鍵值<strong>沒有生效</strong>，
+            換成萬用字元才成功。<strong>這是靠讀框架自己的原始碼才找出來的。</strong>
+</li>
+<li>
+<b>區域錯配的實際代價</b>：函式跑在美東、資料在別的地方，
+            <strong>每次載入頁面付 0.6–1.4 秒的網路成本</strong>。
+            而修法是<strong>改一個設定，零程式碼改動</strong>——
+            這是我做過投報率最高的優化評估。
+          </li>
+<li>
+<b>自動部署</b>：推上 git 就自動建置部署，這本身就是一種 CD。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我遇過一個典型的『本機會動、部署掛掉』：功能依賴一個原生二進位檔，
+          但部署時的靜態分析掃不到執行期才動態載入的東西，所以沒被打包進去。
+          我是靠讀框架自己的建置原始碼才搞懂它的比對規則的——
+          文件上的寫法在我的環境不生效，換成萬用字元才成功。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li><b>CI 流水線</b>：<strong>這個專案沒有任何 <code>.github/workflows</code>，也沒有 test script</strong>。品質把關完全靠人工在本機跑 build 和 lint。這是明確的缺口。</li>
+<li><b>容器化</b>（Docker）：沒用到，因為 serverless 平台把這層抽象掉了。我知道容器解決的是「環境一致性」問題。</li>
+<li><b>漸進式發布</b>（藍綠、金絲雀）：沒做過。目前是直接全量替換。</li>
+<li><b>錯誤追蹤與告警</b>（Sentry 這類）：只有平台內建的基本 log。<strong>目前是靠使用者回報才知道出事</strong>——三次 500 都是使用者貼錯誤訊息給我才知道的。</li>
+<li><b>負載測試</b>：完全沒做過。目前的效能結論都來自單次請求的量測。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch08" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch07">← 上一章</a><a href="#ch09">下一章 →</a></div></div></section>
+<!-- ══════════ 09 ══════════ -->
+<section id="ch09">
+<div class="ch-head"><span class="ch-num">09</span><h2>效能：先量，再改</h2></div>
+<p class="why">
+      效能工作有一條鐵律：<strong>不量就是猜</strong>。
+      而這一章最重要的教訓是——<strong>量錯了比不量更危險</strong>，
+      因為錯誤的量測不會給你「沒有答案」，它會給你一個看起來很合理的錯答案。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>先找瓶頸，再優化</b>。優化一個佔總時間 2% 的環節，
+            <strong>就算做到完美也只快 2%</strong>。
+          </li>
+<li>
+<b>控制變因</b>：一次只改一個條件，用對照組排除嫌疑犯。
+            <strong>這是除錯真正的核心技巧，不是效能專屬的。</strong>
+</li>
+<li>
+<b>Core Web Vitals</b>：Google 定義的三個使用者體感指標——
+            <strong>LCP</strong>（最大內容多久畫出來）、
+            <strong>INP</strong>（點下去多久有反應）、
+            <strong>CLS</strong>（畫面有沒有亂跳）。
+          </li>
+<li>
+<b>快取有很多層</b>：瀏覽器、CDN、伺服器、資料庫，
+            每一層都可能給你舊資料。<strong>快取是最容易引入 bug 的優化手段。</strong>
+</li>
+<li>
+<b>前端的常見瓶頸</b>：JS 檔太大、圖片沒優化、一次渲染太多元素、主執行緒被長任務卡住。
+          </li>
+</ul>
+</div>
+</div>
+<div class="case">
+<div class="case-head">案例研究 · 「返回列表很慢」的完整除錯過程</div>
+<div class="case-body">
+<h4>症狀</h4>
+<p>
+          使用者說：「從詳細頁按返回列表，等待時間太久。」
+          <strong>一句沒有數字的抱怨——所有效能問題的起點。</strong>
+</p>
+<h4>第一次診斷：錯的</h4>
+<p>
+          第一輪測法是監聽自動化工具的「收到回應」事件，當作伺服器工作的結束時間；
+          再看卡片何時出現，中間的差當作前端渲染時間。結論是
+          <strong>「伺服器 0.35 秒很快，前端渲染 1.4–1.8 秒是兇手」</strong>，
+          並排了三個方案：收合群組、分頁、虛擬化。
+        </p>
+<p>
+<strong>三個方案全部打錯目標</strong>，因為那個事件是
+          <strong>header 一到就觸發</strong>，而框架用的是 streaming——
+          header 先送、body 邊算邊送。<strong>1.4 秒的伺服器時間被整段記到前端頭上。</strong>
+</p>
+<div class="bars">
+<div class="bar-row">
+<div class="bar-label"><span class="who is-wrong">舊診斷相信的（錯）</span><span class="tot">約 1.80 s</span></div>
+<div aria-label="舊診斷：伺服器佔 19%，前端渲染佔 81%" class="bar" role="img">
+<div class="seg neutral" style="width:19%">伺服器 0.35s</div>
+<div class="seg slow" style="width:81%">前端渲染 1.45s ← 以為在這</div>
+</div>
+</div>
+<div class="bar-row">
+<div class="bar-label"><span class="who">重測後的真實情況</span><span class="tot">約 1.85 s</span></div>
+<div aria-label="實測：等待回應佔 20%，伺服器抓資料佔 78%，前端渲染僅佔 2%" class="bar" role="img">
+<div class="seg neutral" style="width:20%">等待回應 0.37s</div>
+<div class="seg slow" style="width:78%">伺服器抓資料 1.44s ← 真兇</div>
+<div class="seg fast" style="width:2%">‹2%</div>
+</div>
+</div>
+</div>
+<p class="fig-cap">前端渲染從「佔 81%」縮到「佔 2%」——不是變快了，是它一直都這麼快，只是被量錯。</p>
+<h4>換一套量法：三個原則</h4>
+<ul class="plain">
+<li><b>所有時間點用同一個時鐘</b>——全部在瀏覽器內部取，測試腳本只當信差不當碼表</li>
+<li><b>用能分辨 header 和 body 的工具</b>——Resource Timing API 的 <code>responseStart</code>（header 到）對 <code>responseEnd</code>（body 到齊）</li>
+<li><b>直接問瀏覽器「你什麼時候被卡住」</b>——Long Task API。結果：<strong>0 個長任務</strong>，這一項單獨就推翻了舊診斷</li>
+</ul>
+<h4>控制變因：三個頁面的對照</h4>
+<div class="table-scroll">
+<table>
+<thead><tr><th>頁面</th><th>有查 313 筆？</th><th>送出資料量</th><th>正式站</th><th>本機</th></tr></thead>
+<tbody>
+<tr><td class="k"><code>/login</code></td><td>❌</td><td class="n">5.4 KB</td><td class="n cool">0.40 s</td><td class="n cool">0.005 s</td></tr>
+<tr><td class="k">詳細頁</td><td>✅</td><td class="n">7.8 KB</td><td class="n hot">1.02–1.82 s</td><td class="n">0.15–0.29 s</td></tr>
+<tr><td class="k">列表頁</td><td>✅</td><td class="n">214 KB</td><td class="n hot">1.13–1.85 s</td><td class="n">0.28–0.54 s</td></tr>
+</tbody>
+</table>
+</div>
+<p>
+          這張表一次回答兩件事：<strong>送出的資料量差 27 倍但耗時相同</strong>（所以不是 payload 大小），
+          而<strong>「有沒有去查那 313 筆」才是分水嶺</strong>。
+          再加上本機對照——同一份程式碼換個地方跑就快 4 到 6 倍，
+          <strong>證明問題不在程式碼，在伺服器的位置</strong>。
+        </p>
+<h4>被劃掉的嫌疑犯</h4>
+<ul class="plain">
+<li><s>前端渲染太重</s> → 實測 33–38 ms、長任務 0 個</li>
+<li><s>圖片太大</s> → <strong>把全部圖片請求擋掉（下載 0 位元組）重測，耗時幾乎沒變</strong></li>
+<li><s>資料庫慢</s> → 回應 header 直接寫著它只花 7 毫秒</li>
+<li><s>送回瀏覽器的資料太大</s> → 詳細頁只送 7.8 KB 卻一樣慢</li>
+</ul>
+<h4>根因：兩個因素疊加</h4>
+<div class="flow" style="margin-top:0.4rem;">
+<div class="fnode">
+<div class="ft">使用者</div>
+<div class="fn">瀏覽器</div>
+<div class="fw">台灣</div>
+<div class="fd">按下「返回列表」</div>
+</div>
+<div class="fhop">跨太平洋<span>約 0.2s 起跳</span></div>
+<div class="fnode">
+<div class="ft">執行程式的地方</div>
+<div class="fn">Vercel 函式</div>
+<div class="fw">美東 iad1</div>
+<div class="fd"><strong>平台預設值</strong><br/>沒有人做過這個選擇</div>
+</div>
+<div class="fhop">再一次跨機房<span style="color:var(--signal);font-weight:600;">0.6–1.4s</span></div>
+<div class="fnode">
+<div class="ft">資料在這裡</div>
+<div class="fn">Supabase</div>
+<div class="fw">另一個區域</div>
+<div class="fd">查詢本身只花<br/><strong>7 毫秒</strong></div>
+</div>
+</div>
+<p class="fig-cap" style="margin:0.6rem 0 1.2rem;">
+          請求從香港節點進來（<code>x-vercel-id: hkg1</code>），但真正跑程式的機房在美東（<code>iad1</code>）。
+          <strong>每次載入頁面，209 KB 的資料都要跨機房搬一趟。</strong>
+</p>
+<p>
+<b>一、</b>函式跑在美東機房（平台預設值，<strong>從來沒有人做過這個選擇</strong>），
+          每次載入都要跨機房拉 209 KB 資料。<strong>資料庫算只要 7 毫秒，路上要 0.6–1.4 秒。</strong>
+          而且這不是列表頁專屬——詳細頁為了算上下張也撈全部，同樣在付這個代價。
+        </p>
+<p>
+<b>二、</b>「返回列表」完全沒被預抓。因為 <code>/</code> 是動態路由，
+          框架的預設預抓只到「最近的 loading 邊界」為止，
+          <strong>而這個專案一個 <code>loading.tsx</code> 都沒有</strong>。
+          實測佐證：請求是在<strong>點擊之後</strong> 43–67 毫秒才發出的。
+        </p>
+<h4>修法與取捨</h4>
+<div class="table-scroll">
+<table>
+<thead><tr><th>方案</th><th>成本</th><th>效果</th><th>取捨</th></tr></thead>
+<tbody>
+<tr><td class="k">函式搬到資料庫旁邊</td><td class="cool">零程式碼</td><td class="cool">可能吃掉大部分延遲</td><td>要先確認資料庫區域</td></tr>
+<tr><td class="k">返回連結加預抓</td><td class="cool">一行</td><td>點下去幾乎瞬間</td><td class="hot">治標；使用者沒點也會多打一次伺服器</td></tr>
+<tr><td class="k">詳細頁不要全撈</td><td class="hot">改動大</td><td>減少一次昂貴查詢</td><td class="hot">要重新設計上下張怎麼算</td></tr>
+<tr><td class="k">砍掉用不到的欄位</td><td>小</td><td class="hot">只省 16%</td><td>不划算，先不做</td></tr>
+</tbody>
+</table>
+</div>
+<p style="margin-bottom:0">
+<strong>最大的收穫</strong>：如果沒有先驗證方向就開工，
+          會花好幾週去優化一個只佔總時間 2% 的環節。
+        </p>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li><b>Core Web Vitals 的實際優化</b>：知道三個指標是什麼，但沒有實際針對它們調校過。</li>
+<li><b>Bundle 分析與 code splitting</b>：沒有分析過送到瀏覽器的 JS 有多大、哪些是可以延後載入的。</li>
+<li><b>圖片最佳化</b>：<strong>這是已知缺口</strong>——列表縮圖用的是跟原圖同一份壓縮檔（最大 1920px），只是用 CSS 視覺縮小，<strong>沒有真的產生小尺寸縮圖</strong>。會浪費手機流量。</li>
+<li><b>資料庫查詢優化</b>：沒用過 <code>EXPLAIN</code> 分析查詢計畫。</li>
+<li><b>快取策略</b>：評估過但刻意沒做——因為使用者編輯完就返回列表，<strong>快取沒正確失效會讓他看到自己剛改的東西沒更新，那比慢 1 秒更糟</strong>。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch09" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch08">← 上一章</a><a href="#ch10">下一章 →</a></div></div></section>
+<!-- ══════════ 10 ══════════ -->
+<section id="ch10">
+<div class="ch-head"><span class="ch-num">10</span><h2>測試</h2></div>
+<p class="why">
+      這是這份地圖上<strong>最薄的一章</strong>，要誠實承認。
+      但「知道自己缺什麼、也知道該怎麼補」，比假裝有經驗好得多。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>測試金字塔</b>：<strong>單元測試</strong>（測單一函式，快、多）、
+            <strong>整合測試</strong>（測幾個模組串起來）、
+            <strong>E2E 測試</strong>（模擬真人走完整流程，慢、少但最接近真實）。
+            <strong>底層要多、頂層要少</strong>，因為越上層越慢越脆弱。
+          </li>
+<li>
+<b>為什麼需要測試</b>：不是為了證明「現在是對的」，
+            而是為了<strong>下次改動時知道有沒有弄壞別的東西</strong>（迴歸）。
+          </li>
+<li>
+<b>測試替身</b>（mock / stub）：把外部依賴（資料庫、API）換成假的，
+            讓測試快且可重複。
+          </li>
+<li>
+<b>純函式最好測</b>：同樣輸入永遠同樣輸出、沒有副作用。
+            <strong>這也是為什麼「把邏輯抽成純函式」是好的設計。</strong>
+</li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 11 · 測試金字塔——以及這個專案實際上長什麼樣</div>
+<div class="dia-body">
+<div class="vs">
+<div class="vs-col good">
+<h5>理想的形狀</h5>
+<div class="vc">
+<div class="pyr">
+<div class="pyr-row top has"><b>E2E</b>　少量，走完整流程</div>
+<div class="pyr-row mid has"><b>整合測試</b>　中量，模組串接</div>
+<div class="pyr-row base has"><b>單元測試</b>　大量，快、便宜、精準</div>
+</div>
+<p style="font-size:13.5px;margin:0.9rem 0 0;">
+                底層多、頂層少。因為<strong>越上層越慢、越脆弱、壞掉時越難定位</strong>。
+              </p>
+</div>
+</div>
+<div class="vs-col bad">
+<h5>這個專案的現況</h5>
+<div class="vc">
+<div class="pyr">
+<div class="pyr-row top has"><b>E2E</b>　手寫腳本，關鍵路徑</div>
+<div class="pyr-row mid empty">整合測試　無</div>
+<div class="pyr-row base empty">單元測試　無</div>
+</div>
+<p style="font-size:13.5px;margin:0.9rem 0 0;color:var(--signal);">
+<strong>倒過來了。</strong>只有最貴、最慢的那一層有東西，
+                而且沒有 CI，每次都要人工在本機跑。
+              </p>
+</div>
+</div>
+</div>
+<div class="zone-gap" style="padding-top:1.1rem;">
+<b>最該補的第一塊</b>
+          那個共用的篩選／排序／分組邏輯是<strong>純函式</strong>——給定資料和參數、回傳排好的清單，
+          沒有資料庫、沒有畫面、沒有副作用。<br/>
+          它是全專案最好測的地方，而且<strong>它真的出過一次「所有數字都對、只有順序悄悄錯了」的 bug</strong>——
+          正是單元測試最擅長抓的類型。
+        </div>
+</div>
+</div>
+<p class="dia-cap">
+      金字塔的重點不是「E2E 不好」，而是<strong>比例</strong>。
+      E2E 能證明「整條路是通的」，但它跑一次要好幾秒、環境一抖就假性失敗、
+      壞掉時你只知道「某個地方壞了」。單元測試會直接告訴你是哪一行。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>用 Playwright 做 E2E 驗證</b>：以訪客身分走過流程，
+            確認未登入看不到編輯按鈕、受保護路由會被導向登入頁、
+            篩選條件在返回後有保留。
+          </li>
+<li>
+<b>對照資料庫驗收，而不是只看畫面</b>：分組筆數對不對，
+            是拿畫面上的數字<strong>跟直接查資料庫的結果比對</strong>的。
+          </li>
+<li>
+<b>測試工具會製造它自己的假象</b>：整頁截圖看起來圖片全沒載入，
+            實際上是 <code>loading="lazy"</code> 還沒被觸發——
+            截圖是「把視窗撐到全頁高度後瞬間拍照」，下面的圖根本沒機會載入。
+            正確做法是捲到定位後檢查圖片的實際寬度。
+          </li>
+<li>
+<b>量測方法本身要先被驗證</b>：這是第 09 章最大的教訓——
+            <strong>你的測試工具可能正在對你說謊。</strong>
+</li>
+</ul>
+<div class="say">
+<b>面試可以這樣說（誠實版）</b>
+          「這個專案沒有自動化測試套件，這是我明確知道的缺口。
+          我做的是用 Playwright 手動寫腳本做關鍵路徑的驗證和效能量測。
+          過程中我學到一件事——<strong>測試工具本身會製造假象</strong>，
+          我遇過整頁截圖看起來圖片全沒載入，其實是延遲載入還沒觸發。
+          如果要補，我會從<strong>純函式的單元測試</strong>開始，因為那部分邏輯最集中也最好測。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的（這一章幾乎全是缺口）</div>
+<div class="block-body">
+<ul>
+<li><b>單元測試框架</b>（Jest / Vitest）：<strong>專案裡沒有任何測試檔，<code>package.json</code> 也沒有 test 指令。</strong></li>
+<li><b>測試覆蓋率</b>：沒量過。</li>
+<li><b>CI 上自動跑測試</b>：沒有流水線，每次都是手動在本機跑 build 和 lint。</li>
+<li><b>TDD</b>：沒有實踐過。</li>
+<li>
+<b>最該補的第一步</b>：那個共用的篩選／排序／分組邏輯是<strong>純函式</strong>——
+            給定資料和參數，回傳排好的清單。<strong>這是全專案最適合寫單元測試的地方</strong>，
+            而且它出過一次「順序悄悄錯掉」的 bug，正是單元測試最能抓到的類型。
+          </li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch10" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch09">← 上一章</a><a href="#ch11">下一章 →</a></div></div></section>
+<!-- ══════════ 11 ══════════ -->
+<section id="ch11">
+<div class="ch-head"><span class="ch-num">11</span><h2>架構決策與技術債</h2></div>
+<p class="why">
+      資深和資淺的差別通常不在「會不會寫」，而在
+      <strong>「知不知道自己在做取捨」以及「有沒有把取捨記下來」</strong>。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>狀態該住在哪裡</b>：元件內、網址、瀏覽器儲存、伺服器——
+            <strong>問兩個問題就能決定：「它要活多久？」「別人需要看到它嗎？」</strong>
+</li>
+<li>
+<b>單一真相來源</b>：同一件事不要有兩份答案。
+            兩份遲早會不一致，而且不一致的時候通常沒有人會發現。
+          </li>
+<li>
+<b>技術債不等於爛程式碼</b>：多數技術債是
+            <strong>「當初正確的判斷，但前提條件變了」</strong>。
+          </li>
+<li>
+<b>把決策的理由寫下來</b>：尤其是<strong>「我們刻意不做 X」</strong>——
+            因為下一個人（包括三個月後的你）看到缺少 X，會以為是忘了做。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 12 · 狀態該住在哪裡——用兩個問題定位</div>
+<div class="dia-body">
+<div class="table-scroll" style="margin:0;">
+<div class="mtx" style="min-width:520px;">
+<div class="mh"></div>
+<div class="mh">只有我自己需要看到</div>
+<div class="mh">別人也要看得到（可分享）</div>
+<div class="mh">活得短<br/>換頁就可以忘掉</div>
+<div class="mc on">
+<b>元件內 useState</b>
+<small>例：群組收合狀態。純視覺、暫時性，塞進網址只會讓網址變醜</small>
+</div>
+<div class="mc">
+<small>（幾乎不存在——要分享就代表它得活得夠久）</small>
+</div>
+<div class="mh">活得中等<br/>要撐過一次導航</div>
+<div class="mc on">
+<b>sessionStorage</b>
+<small>例：捲動位置。網址塞不下，而且「返回列表」算前進導航，瀏覽器不會自動還原</small>
+</div>
+<div class="mc">
+<small>（同上）</small>
+</div>
+<div class="mh">活得久<br/>重整、分享都要在</div>
+<div class="mc">
+<small>localStorage<br/>（例如深色模式偏好）</small>
+</div>
+<div class="mc on">
+<b>網址參數</b>
+<small>例：篩選與排序條件。重整不掉、可以把連結傳給別人、瀏覽器上一頁天然可用</small>
+</div>
+<div class="mh">永久<br/>所有人共用</div>
+<div class="mc">
+<small>（不適用）</small>
+</div>
+<div class="mc on">
+<b>資料庫</b>
+<small>例：物種資料本身</small>
+</div>
+</div>
+</div>
+<div class="chain" style="margin-top:1.2rem;">
+<div class="cbox"><div class="cl">問題一</div><div class="cv">它要活多久？</div><div class="cc">決定縱軸</div></div>
+<div class="carrow">＋</div>
+<div class="cbox"><div class="cl">問題二</div><div class="cv">別人需要看到它嗎？</div><div class="cc">決定橫軸</div></div>
+<div class="carrow">→</div>
+<div class="cbox cool"><div class="cl">結果</div><div class="cv">它該住哪裡</div><div class="cc">兩題就夠了</div></div>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+      這個專案的列表頁<strong>同時用到了三格</strong>——因為那三件事的存活需求真的不同。
+      放錯位置的代價很實際：篩選條件如果放在 useState，重新整理就消失、也沒辦法把連結傳給別人。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>同一個頁面的三種狀態，放在三個不同地方</b>：
+            <div class="table-scroll" style="margin:0.9rem 0;">
+<table>
+<thead><tr><th>要記住什麼</th><th>放哪裡</th><th>為什麼</th></tr></thead>
+<tbody>
+<tr><td class="k">篩選、排序</td><td class="k">網址參數</td><td>重整不掉、可分享、瀏覽器上一頁天然可用</td></tr>
+<tr><td class="k">捲動位置</td><td class="k">sessionStorage</td><td>網址塞不下；而且「返回」算前進導航，瀏覽器不會自動還原</td></tr>
+<tr><td class="k">群組收合</td><td class="k">元件內 state</td><td>純視覺暫時狀態，進網址只會讓網址變醜</td></tr>
+</tbody>
+</table>
+</div>
+</li>
+<li>
+<b>單一真相來源的實作</b>：列表頁和詳細頁共用<strong>同一份</strong>篩選／排序／分組邏輯。
+            理由很具體——詳細頁的「下一張」必須跟使用者眼睛看到的順序完全一致，
+            <strong>兩邊各寫一份遲早會漂移</strong>。
+          </li>
+<li>
+<b>技術債到期的過程</b>：詳細頁為了算上下張而撈全部資料，
+            當初 285 筆時是<strong>明確評估過並寫進紀錄的正確判斷</strong>。
+            現在 313 筆配上美東伺服器，同樣的決定要價 0.6–1.4 秒。
+            <strong>不是有人做錯，是前提變了而假設沒跟著檢查。</strong>
+</li>
+<li>
+<b>刻意不做的事也要記錄</b>：不加欄位約束（要讓值域自由擴充）、
+            不做忘記密碼流程（管理者就是本人）、不做上傳失敗回滾（回滾動作本身同樣會失敗）——
+            <strong>每一條都寫了理由</strong>。
+          </li>
+<li>
+<b>需求理解錯誤的代價</b>：曾經整個功能做完、程式碼逐字符合規格，
+            <strong>才發現解決不了真正的問題</strong>，全部退回。
+            事後找到當初漏掉的線索：使用者說「總覽頁只顯示一張」——
+            在錯誤的解讀下，<strong>那句話等於沒有要求任何改變</strong>。
+            <br/>
+<strong>可帶走的訊號：當使用者的某句話在你的理解下變成廢話，那通常是你理解錯了。</strong>
+</li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「我維護的專案有一份文件專門記錄<strong>『我們刻意不做什麼，以及為什麼』</strong>。
+          這比記錄做了什麼更有價值——因為下一個人看到缺少某個功能，
+          會以為是疏漏而去『補』上，反而破壞當初的設計意圖。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li><b>微服務 vs 單體</b>：這是單體（而且是很小的單體）。我知道微服務解決的是「大團隊各自獨立部署」的組織問題，不是技術問題。</li>
+<li><b>事件驅動架構</b>、訊息佇列：沒碰過。</li>
+<li><b>多人協作的分支策略</b>與 code review 流程：這是單人專案，沒有 PR review 的實務經驗。</li>
+<li><b>樂觀鎖／衝突處理</b>：<strong>已知缺口</strong>——兩個人同時編輯同一筆，後寫入的會直接覆蓋先寫入的，沒有任何警告。</li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch11" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch10">← 上一章</a><a href="#ch12">下一章 →</a></div></div></section>
+<!-- ══════════ 12 ══════════ -->
+<section id="ch12">
+<div class="ch-head"><span class="ch-num">12</span><h2>PWA：讓網站變成手機上的 App</h2></div>
+<p class="why">
+      使用者說「我想在手機上像 App 一樣用」的時候，直覺反應通常是「那要再寫一套 App 嗎」。
+      答案是不用——<strong>同一個網站，加一份說明檔和幾張圖示，手機就會願意把它當 App 對待</strong>。
+      這一章是關於那份說明檔裡寫了什麼，以及它<strong>做不到</strong>什麼。
+    </p>
+<div class="block core">
+<div class="block-head">核心觀念</div>
+<div class="block-body">
+<ul>
+<li>
+<b>網站與原生 App 的差別</b>：原生 App 是下載到手機裡的一包程式，有自己的圖示和視窗、可以離線，
+            代價是要送審、更新要再送一次、使用者得去商店安裝。網站改完就生效，
+            但它永遠長得像網頁——有網址列、要先打開瀏覽器才找得到。
+          </li>
+<li>
+<b>PWA 是中間那條路</b>：Progressive Web App。
+            <strong>骨子裡還是同一個網站，一行功能都沒改</strong>，
+            只是多放了一份檔案告訴手機「我希望被當成 App 對待」。
+          </li>
+<li>
+<b>Web App Manifest</b>：那份檔案就是它，一份 JSON，寫著名稱、圖示、主題色。
+            關鍵的是 <code>display: "standalone"</code>——這一行是在說
+            <strong>「從主畫面開啟時不要顯示網址列與工具列」</strong>。
+            少了它，「加到主畫面」就只是一個開在瀏覽器裡的書籤。
+          </li>
+<li>
+<b>「可安裝」和「可離線」是兩件事</b>：manifest 只負責前者。
+            離線要另外寫 <strong>Service Worker</strong>——一段跑在瀏覽器背景、
+            能攔截網路請求並回傳快取內容的程式。
+            <strong>沒有它，PWA 看起來像 App，但沒網路就打不開。</strong>
+</li>
+<li>
+<b>平台差異是真的會咬人的地方</b>：
+            <strong>iOS 完全不讀 manifest 裡的 icons</strong>，只認 <code>apple-touch-icon</code>，
+            所以必須另外放一張；Android 則會把圖示裁成圓形／方形／水滴形（看廠牌），
+            圖案得縮在中央、四周留安全區，這種圖叫 <strong>maskable</strong>。
+          </li>
+<li>
+<b>安裝的前提是 HTTPS</b>。這不是額外的工作，而是現代部署平台的預設值，
+            但它是條件之一——純 HTTP 的站不會被當成可安裝的 App。
+          </li>
+</ul>
+</div>
+</div>
+<div class="dia">
+<div class="dia-head">圖 13 · 一份 manifest 換到什麼、換不到什麼</div>
+<div class="dia-body">
+<div class="chain">
+<div class="cbox">
+<div class="cl">原本</div>
+<div class="cv">一個網站</div>
+<div class="cc">要開瀏覽器、打網址</div>
+</div>
+<div class="carrow">→</div>
+<div class="cbox">
+<div class="cl">加上</div>
+<div class="cv">manifest ＋ 圖示</div>
+<div class="cc">沒有動到任何功能</div>
+</div>
+<div class="carrow">→</div>
+<div class="cbox cool">
+<div class="cl">結果</div>
+<div class="cv">主畫面上的圖示</div>
+<div class="cc">全螢幕開啟</div>
+</div>
+</div>
+<div style="display:grid;gap:0.9rem;">
+<div class="zone safe">
+<div class="zl">換到了</div>
+<ul>
+<li>主畫面上有圖示，跟其他 App 排在一起</li>
+<li>點開沒有網址列，看起來就是一個 App</li>
+<li>狀態列是站上的主題色，不是瀏覽器的灰白</li>
+<li><strong>改完推上去就是新版</strong>，不用送審、不用更新、不用重裝</li>
+</ul>
+</div>
+<div class="zone danger">
+<div class="zl">沒換到</div>
+<ul>
+<li>不在 App Store 裡，別人只能靠你給網址才找得到</li>
+<li><strong>沒網路就打不開</strong>——這要靠 Service Worker，是另一件事</li>
+<li>沒有推播通知</li>
+<li>碰不到多數手機硬體能力（藍牙、背景定位…）</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+      這張圖的重點是右邊那一欄。PWA 最容易被誤解的地方，
+      是把「看起來像 App」當成「就是 App」——
+      <strong>安裝了不等於能離線</strong>，這兩件事在技術上完全分開。
+    </p>
+<div class="block done">
+<div class="block-head">你在這個專案碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>用框架的檔案慣例產生 manifest</b>：放一個 <code>manifest.ts</code> 在指定位置，
+            框架會自動輸出 <code>/manifest.webmanifest</code> 並在 <code>&lt;head&gt;</code> 插入對應的
+            <code>&lt;link&gt;</code>。<strong>不需要自己寫那個標籤，但要知道它被產生了</strong>——
+            驗證時看的就是它在不在。
+          </li>
+<li>
+<b>四張圖示，分別給不同平台</b>：192／512 給 Android，512 的 maskable 版本
+            另外做（把圖縮到畫布中央約 75%、四周補底色當安全區，不然邊緣會被裁掉），
+            再加一張 180×180 的 <code>apple-icon</code> 給 iOS。
+            <strong>iOS 那張不能省——它不讀 manifest 裡的 icons。</strong>
+</li>
+<li>
+<b>踩到框架版本差異</b>：主題色設定在這個版本<strong>已經從
+            <code>metadata</code> 搬到獨立的 <code>viewport</code> 匯出</strong>。
+            寫在舊位置<strong>不會報錯，只是被安靜忽略</strong>——
+            這類「沒有錯誤訊息的失效」最難發現，只能靠實際檢查產生出來的標籤。
+          </li>
+<li>
+<b>背景色要跟站上的底色一致</b>：那是啟動時的過場顏色，
+            設錯會在開啟瞬間閃一下白畫面。
+          </li>
+<li>
+<b>iOS 主畫面的 PWA 有自己的快取</b>，跟 Safari 分開，
+            而且<strong>沒有網址列也就沒有重新整理鈕</strong>。
+            正式站更新後手機還看到舊畫面時，唯一的解法是把圖示刪掉重加一次——
+            實際踩過，第一次遇到會以為是部署失敗。
+          </li>
+<li>
+<b>圖示「消失」過一次，原因不在圖示</b>：那批檔案當時只存在於某個分支上，
+            主線根本沒有。<strong>症狀出現在手機上，原因在版本控制</strong>，
+            查錯方向差了十萬八千里。
+          </li>
+</ul>
+<div class="say">
+<b>面試可以這樣說</b>
+          「使用者希望手機上能像 App 一樣用。我沒有另外寫原生 App，
+          而是加了 PWA 支援——一份 manifest 加四張圖示，
+          關鍵是 <code>display: standalone</code>，它讓網站從主畫面開啟時不顯示網址列。
+          過程中學到兩件事：一是<strong>平台差異必須個別處理</strong>，
+          iOS 不讀 manifest 的圖示、Android 會把圖示裁成不同形狀；
+          二是<strong>『可安裝』和『可離線』是分開的</strong>，
+          我這個專案只做了前者，沒有 Service Worker，所以沒網路就打不開。
+          這是我明確知道的邊界，不是以為做完了。」
+        </div>
+</div>
+</div>
+<div class="block gap">
+<div class="block-head">還沒碰過的</div>
+<div class="block-body">
+<ul>
+<li>
+<b>Service Worker</b>：<strong>站上沒有</strong>（<code>/sw.js</code> 回 404，查證過）。
+            所以沒有離線瀏覽、沒有快取策略、沒有背景同步。
+            這是這一章最大的缺口，也是「像 App」和「是 App」之間真正的距離。
+          </li>
+<li>
+<b>快取策略</b>：cache-first／network-first／stale-while-revalidate 這些取捨，
+            知道名字但沒有實作過。<strong>對這個專案還特別敏感</strong>——
+            照片是主要內容，快取策略下錯會直接影響流量帳單（見第 09 章）。
+          </li>
+<li><b>推播通知</b>（Web Push）：沒做，這個專案也沒有需要通知的場景。</li>
+<li><b>安裝提示</b>（<code>beforeinstallprompt</code>）：沒有做引導安裝的自訂 UI，靠使用者自己從瀏覽器選單加入。</li>
+<li>
+<b>Lighthouse 的 PWA 稽核</b>：沒跑過。
+            <strong>驗證方式是自己一項項確認產生出來的標籤和檔案</strong>，
+            能確認「有沒有」，但沒有一份標準化的評分。
+          </li>
+</ul>
+</div>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch12" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch11">← 上一章</a><a href="#ch13">下一章 →</a></div></div></section>
+<section id="ch13">
+<div class="ch-head"><span class="ch-num">13</span><h2>面試怎麼講</h2></div>
+<p class="why">
+      面試官問「講一個你解決過的難題」，他要聽的不是你多會寫程式，
+      而是<strong>你怎麼在資訊不足的情況下逼近答案</strong>。
+    </p>
+<div class="dia" style="margin-top:0.5rem;">
+<div class="dia-head">圖 14 · 一個好的除錯故事的形狀</div>
+<div class="dia-body">
+<div class="chain">
+<div class="cbox"><div class="cl">1</div><div class="cv">症狀</div><div class="cc">一句沒有數字的抱怨</div></div>
+<div class="carrow">→</div>
+<div class="cbox hot"><div class="cl">2</div><div class="cv">第一次診斷</div><div class="cc">看起來很合理，但錯了</div></div>
+<div class="carrow">→</div>
+<div class="cbox"><div class="cl">3</div><div class="cv">發現量測方法有問題</div><div class="cc">← 故事的轉折點</div></div>
+</div>
+<div class="chain">
+<div class="cbox"><div class="cl">4</div><div class="cv">換一套量法</div><div class="cc">同一時鐘、正確的觀測點</div></div>
+<div class="carrow">→</div>
+<div class="cbox"><div class="cl">5</div><div class="cv">控制變因</div><div class="cc">對照組逐一排除嫌疑犯</div></div>
+<div class="carrow">→</div>
+<div class="cbox cool"><div class="cl">6</div><div class="cv">根因＋取捨</div><div class="cc">不只找到，還評估了修法代價</div></div>
+</div>
+<div class="zone-gap" style="padding-top:1.1rem;">
+<b>第 2 步和第 3 步才是這個故事真正的價值</b>
+          「我找到並修好了一個 bug」是每個人都會講的。<br/>
+<strong>「我發現我們原本的判斷是錯的，而且我說得出為什麼會錯」——這個層次的人少很多。</strong>
+</div>
+</div>
+</div>
+<p class="dia-cap">
+      面試時<strong>不要跳過第 2 步</strong>。承認第一版是錯的不會扣分，
+      反而證明你有能力質疑既有結論、也有能力驗證自己。
+    </p>
+<h3>主線故事（STAR 格式）</h3>
+<div class="script">
+<div class="step">Situation</div>
+<p>
+        我維運一個自己的圖鑑網站，前端 Next.js、資料庫 Supabase、部署在 Vercel。
+        使用者回報「從詳細頁返回列表要等 1 到 2 秒」。
+      </p>
+<div class="step">Task</div>
+<p>
+        第一版診斷認為是前端一次渲染 313 張卡片太重，排了三個方案。
+        但我在動工前想先確認方向對不對，所以重新量了一次。
+      </p>
+<div class="step">Action</div>
+<p>
+        我先發現舊量測方法有瑕疵：它用「收到回應」事件當伺服器結束時間，
+        但那個事件是 header 一到就觸發，而框架是串流回應——header 先送、body 邊算邊送。
+        所以一大段伺服器時間被誤算成前端時間。
+      </p>
+<p>
+        改用 Resource Timing API 分辨 header 和 body 的抵達時間、把所有觀測放在同一個時鐘上，
+        再加 Long Task API 確認主執行緒有沒有真的被卡住。
+        結果前端渲染只有 33 毫秒、長任務 0 個——原本的方向是錯的。
+      </p>
+<p>
+        接著設計對照組縮小範圍：比較有查資料庫和沒查的頁面、
+        比較送 7 KB 和送 214 KB 的頁面、比較同一份程式碼跑在正式站和本機。
+        三組對照分別排除掉資料量、渲染量、程式碼本身。
+      </p>
+<p>
+        最後從回應 header 找到答案：函式跑在美東機房，而資料庫回報自己只花 7 毫秒——
+        99% 的時間花在兩者之間的網路距離上。
+      </p>
+<div class="step">Result</div>
+<p>
+        根因確認後方案完全換了一批，最高投報率的是把函式區域搬到跟資料庫同一區，
+        零程式碼改動、而且列表頁和詳細頁會一起變快。
+        最大的收穫是：<strong>錯誤的量測不會給你「沒有答案」，
+        它會給你一個看起來很合理的錯答案。</strong>
+</p>
+</div>
+<h3>被追問時的答法</h3>
+<div class="qa">
+<details>
+<summary>你怎麼確定不是資料庫慢？</summary>
+<div class="a">
+<p>資料庫每個回應都夾帶它自己的處理時間，全欄 313 筆是 7 毫秒。</p>
+<p>另外有旁證：同一份程式碼跑在本機時整頁 0.28 秒就完成，代表拿資料本身不是問題。</p>
+</div>
+</details>
+<details>
+<summary>為什麼不直接加快取？</summary>
+<div class="a">
+<p>
+            可以，但要先想代價：使用者的典型流程是編輯完一筆就返回列表。
+            如果快取沒正確失效，他會看到自己剛改的東西沒更新——<strong>那比慢 1 秒更糟</strong>。
+          </p>
+<p>
+            相較之下「把伺服器搬到資料庫旁邊」沒有正確性風險，所以排在前面。
+            <strong>快取是最容易引入 bug 的優化手段，通常該是最後一招而不是第一招。</strong>
+</p>
+</div>
+</details>
+<details>
+<summary>如果是團隊專案，你會怎麼避免同樣的事？</summary>
+<div class="a">
+<p>
+            兩件事。第一，紀錄要寫<strong>量測方法</strong>不只寫結論——
+            這次錯誤能被抓出來，就是因為舊紀錄有寫「怎麼量的」。
+          </p>
+<p>
+            第二，動工前先確認「這個修法會影響總時間的百分之幾」。
+            舊方案要優化的部分只佔 2%，就算做到完美也只快 2%。
+            <strong>這個檢查五分鐘，可以省下好幾週。</strong>
+</p>
+</div>
+</details>
+<details>
+<summary>你們有寫測試嗎？</summary>
+<div class="a">
+<p>
+<strong>照實說：沒有自動化測試套件，這是我知道的缺口。</strong>
+            我用 Playwright 寫過關鍵路徑的驗證腳本，但沒有 CI 流水線。
+          </p>
+<p>
+            如果要補，我會從那個共用的篩選排序邏輯開始——它是純函式，最好測，
+            而且它真的出過一次「所有數字都對、只有順序悄悄錯了」的 bug，
+            <strong>正是單元測試最能抓到的類型</strong>。
+          </p>
+</div>
+</details>
+<details>
+<summary>你自己寫了多少程式？</summary>
+<div class="a">
+<p>
+<strong>照實回答。</strong>如果你的角色偏產品／規劃，就說你負責定義問題、
+            驗證方向、決定優先順序，實作由誰完成。
+          </p>
+<p>
+<strong>誠實反而加分</strong>——「發現方向錯了並把它擋下來」本身就是資深判斷，
+            不需要靠誇大實作份量來包裝。面試官最怕的是講不出細節的人，而這些細節你全都有。
+          </p>
+</div>
+</details>
+</div>
+<h3>三個可以帶到任何專案的原則</h3>
+<div class="note">
+<h4>一、先量再改</h4>
+<p>優化一個佔 2% 的環節，做到完美也只快 2%。而且<strong>量錯比不量更危險</strong>。</p>
+</div>
+<div class="note">
+<h4>二、挑一個不會說謊的觀測點</h4>
+<p>
+        畫面文字可以由很多原因造成，但「網路請求有沒有發出去」只有一個解釋。
+        「刪除有沒有成功」不要看有沒有報錯，要看<strong>實際影響筆數</strong>。
+      </p>
+</div>
+<div class="note">
+<h4>三、預設值也是一種決定</h4>
+<p>
+        這次的兩個根因——伺服器在美東、沒有預抓——
+        <strong>都不是有人選錯，是沒有人意識到這裡有一個選擇</strong>。
+        除錯時「這裡的預設值是什麼、為什麼」永遠值得問一次。
+      </p>
+</div>
+<div class="ms-section-tools"><button class="ms-complete" data-section="ch13" type="button">○ 標記這章完成</button><div class="ms-pager"><a href="#ch12">← 上一章</a><a class="disabled">下一章 →</a></div></div></section>
+<footer>
+<p>
+      案例來自海蛞蝓圖鑑（Next.js 16 · Supabase · Vercel · TypeScript），
+      一個 313 筆資料、邀請制多人共編的個人專案。
+      效能數據量測於 2026-09-01 正式站環境，各項目重複 3–4 次取範圍值；
+      「還沒碰過」的部分是對照真實程式碼盤點的結果，不是推測。
+    </p>
+</footer>
+</div>
+<script>
+(() => {
+  const root = document.documentElement;
+  const body = document.body;
+  const sections = [...document.querySelectorAll('section[id]')];
+  const navLinks = [...document.querySelectorAll('#msNav a')];
+  const progress = document.getElementById('msProgress');
+  const title = document.getElementById('msMobileTitle');
+  const backTop = document.getElementById('msBackTop');
+
+  const openDrawer = () => body.classList.add('ms-drawer-open');
+  const closeDrawer = () => body.classList.remove('ms-drawer-open');
+
+  document.getElementById('msMenuBtn')?.addEventListener('click', openDrawer);
+  document.getElementById('msCloseBtn')?.addEventListener('click', closeDrawer);
+  document.getElementById('msBackdrop')?.addEventListener('click', closeDrawer);
+  navLinks.forEach(a => a.addEventListener('click', closeDrawer));
+
+  // Explicit light/dark preference. If not set, existing prefers-color-scheme CSS still applies.
+  const applyTheme = theme => {
+    if (theme === 'light' || theme === 'dark') {
+      root.dataset.theme = theme;
+      localStorage.setItem('fullstack-map-theme', theme);
+    }
+  };
+  const savedTheme = localStorage.getItem('fullstack-map-theme');
+  if (savedTheme) applyTheme(savedTheme);
+
+  const toggleTheme = () => {
+    const now = root.dataset.theme ||
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(now === 'dark' ? 'light' : 'dark');
+  };
+  document.getElementById('msThemeBtn')?.addEventListener('click', toggleTheme);
+  document.getElementById('msDrawerThemeBtn')?.addEventListener('click', toggleTheme);
+
+  // Chapter completion persistence
+  const completionButtons = [...document.querySelectorAll('.ms-complete')];
+  const updateCompleteButton = btn => {
+    const key = `fullstack-complete:${btn.dataset.section}`;
+    const done = localStorage.getItem(key) === '1';
+    btn.classList.toggle('done', done);
+    btn.textContent = done ? '✓ 這章已完成' : '○ 標記這章完成';
+    const link = document.querySelector(`#msNav a[href="#${btn.dataset.section}"]`);
+    if (link) {
+      const num = link.querySelector('.num');
+      if (num) num.textContent = done ? '✓' : String(
+        sections.findIndex(s => s.id === btn.dataset.section) + 1
+      ).padStart(2,'0');
+    }
+  };
+  completionButtons.forEach(btn => {
+    updateCompleteButton(btn);
+    btn.addEventListener('click', () => {
+      const key = `fullstack-complete:${btn.dataset.section}`;
+      const done = localStorage.getItem(key) === '1';
+      localStorage.setItem(key, done ? '0' : '1');
+      updateCompleteButton(btn);
+    });
+  });
+  document.getElementById('msResetBtn')?.addEventListener('click', () => {
+    if (!confirm('要清除所有章節完成進度嗎？')) return;
+    completionButtons.forEach(btn => {
+      localStorage.removeItem(`fullstack-complete:${btn.dataset.section}`);
+      updateCompleteButton(btn);
+    });
+  });
+
+  // Search chapter contents
+  const search = document.getElementById('msSearch');
+  search?.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase();
+    sections.forEach(sec => {
+      sec.classList.toggle('ms-search-hidden', !!q && !sec.innerText.toLowerCase().includes(q));
+    });
+    navLinks.forEach(a => {
+      const sid = a.getAttribute('href').slice(1);
+      const sec = document.getElementById(sid);
+      a.style.display = sec?.classList.contains('ms-search-hidden') ? 'none' : '';
+    });
+  });
+
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const pct = max > 0 ? scrollY / max * 100 : 0;
+    if (progress) progress.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+    backTop?.classList.toggle('show', scrollY > 650);
+
+    let current = sections[0];
+    for (const sec of sections) {
+      if (sec.getBoundingClientRect().top <= 85) current = sec;
+    }
+    const h = current?.querySelector('h2')?.textContent?.trim();
+    if (h && title) title.textContent = h;
+    navLinks.forEach(a => a.classList.toggle(
+      'active', a.getAttribute('href') === `#${current?.id}`
+    ));
+  };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  backTop?.addEventListener('click', () => scrollTo({top:0, behavior:'smooth'}));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+})();
+</script><a class="hub-home-link" href="./index.html" aria-label="回到學習首頁">⌂ 學習首頁</a>
+</body></html>
